@@ -4,10 +4,6 @@ ArrayField Interface Suite
 by Meta
 
 Original by Sirius
-
--------------------------------
-Arrays  | Designing + Programming + New Features
-
 ]]
 
 local Release = "Release 2A"
