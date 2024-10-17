@@ -1,3 +1,54 @@
+local function adjustForMobile()
+    if isMobile() then
+        -- Adjust font sizes
+        Title.TextSize = 18
+        Subtitle.TextSize = 14
+        -- Adjust other UI elements as needed
+    end
+end
+
+adjustForMobile()
+local UserInputService = game:GetService("UserInputService")
+local dragging
+local dragInput
+local dragStart
+local startPos
+
+local function update(input)
+    local delta = input.Position - dragStart
+    Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+Main.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = Main.Position
+
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+Main.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        update(input)
+    end
+end)
+local Size = isMobile() and UDim2.new(0.8, 0, 0.6, 0) or UDim2.new(0, 615, 0, 344)
+Main.Size = Size
+local function isMobile()
+    return game:GetService("UserInputService").TouchEnabled and not game:GetService("UserInputService").MouseEnabled
+end
 --[[
 
 ArrayField Interface Suite
@@ -7,7 +58,6 @@ Original by Sirius
 
 -------------------------------
 Arrays  | Designing + Programming + New Features
-vqmpjay too now!!11
 
 ]]
 
@@ -19,12 +69,6 @@ local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
 local ConfigurationExtension = ".rfld"
 local RayFieldQuality = {}
-
-local UserInputService = game:GetService("UserInputService")
-
-local function isMobile()
-    return UserInputService.TouchEnabled and not UserInputService.MouseEnabled
-end
 
 local RayfieldLibrary = {
 	Flags = {},
@@ -3578,48 +3622,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 	return Window
 end
 
-if isMobile() then
-    Window.Size = UDim2.new(0.8, 0, 0.6, 0)
-    Window.Position = UDim2.new(0.1, 0, 0.2, 0)
-end
-
-if isMobile() then
-    local dragging
-    local dragInput
-    local dragStart
-    local startPos
-
-    local function update(input)
-        local delta = input.Position - dragStart
-        Window.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-
-    Window.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.Touch then
-            dragging = true
-            dragStart = input.Position
-            startPos = Window.Position
-
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-
-    Window.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-
-    UserInputService.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            update(input)
-        end
-    end)
-end
 
 function RayfieldLibrary:Destroy()
 	Rayfield:Destroy()
