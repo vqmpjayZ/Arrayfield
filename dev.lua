@@ -1,5 +1,5 @@
 --[[
-ayo, version checkkk v1.2.4
+ayo, version checkkk v1.2.5
 ]]
 
 local Release = "Release 1B"
@@ -160,16 +160,27 @@ Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
 
 if isMobile then
-    local scaleFactor = 0.7 -- Adjust this value to control how much smaller the UI should be on mobile
+    local scaleFactor = 0.7 -- Adjust this value to control the UI size on mobile
     local function ScaleUIForMobile()
-        for _, uiElement in ipairs(Rayfield:GetDescendants()) do
+        -- Function to scale both size and position
+        local function ScaleElement(uiElement)
             if uiElement:IsA("GuiObject") then
-                -- Scale the size
+                -- Scale Size
                 uiElement.Size = UDim2.new(uiElement.Size.X.Scale * scaleFactor, uiElement.Size.X.Offset * scaleFactor, uiElement.Size.Y.Scale * scaleFactor, uiElement.Size.Y.Offset * scaleFactor)
-                -- Scale the position
+                
+                -- Scale Position
                 uiElement.Position = UDim2.new(uiElement.Position.X.Scale * scaleFactor, uiElement.Position.X.Offset * scaleFactor, uiElement.Position.Y.Scale * scaleFactor, uiElement.Position.Y.Offset * scaleFactor)
             end
         end
+        
+        -- Scale all descendants of the Rayfield UI
+        for _, uiElement in ipairs(Rayfield:GetDescendants()) do
+            ScaleElement(uiElement)
+        end
+        
+        -- Specifically scale Main and Topbar if they need separate treatment
+        ScaleElement(Main)
+        ScaleElement(Topbar)
     end
 
     ScaleUIForMobile() -- Apply scaling when detected
