@@ -116,6 +116,7 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = game:GetService('Players').LocalPlayer
 local TextService = game:GetService("TextService") 
+local isMobile = game:GetService("UserInputService").TouchEnabled
 -- Interface Management
 local Rayfield = game:GetObjects("rbxassetid://11637506633")[1]
 
