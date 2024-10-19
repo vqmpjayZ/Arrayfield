@@ -1,54 +1,3 @@
-local function adjustForMobile()
-    if isMobile() then
-        -- Adjust font sizes
-        Title.TextSize = 18
-        Subtitle.TextSize = 14
-        -- Adjust other UI elements as needed
-    end
-end
-
-adjustForMobile()
-local UserInputService = game:GetService("UserInputService")
-local dragging
-local dragInput
-local dragStart
-local startPos
-
-local function update(input)
-    local delta = input.Position - dragStart
-    Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-end
-
-Main.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = Main.Position
-
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
-    end
-end)
-
-Main.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
-    end
-end)
-
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        update(input)
-    end
-end)
-local Size = isMobile() and UDim2.new(0.8, 0, 0.6, 0) or UDim2.new(0, 615, 0, 344)
-Main.Size = Size
-local function isMobile()
-    return game:GetService("UserInputService").TouchEnabled and not game:GetService("UserInputService").MouseEnabled
-end
 --[[
 
 ArrayField Interface Suite
@@ -58,7 +7,7 @@ Original by Sirius
 
 -------------------------------
 Arrays  | Designing + Programming + New Features
-
+vqmp 2
 ]]
 
 
@@ -158,7 +107,7 @@ local RayfieldLibrary = {
 
 
 -- Services
-
+local isMobile = game:GetService("UserInputService").TouchEnabled
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
@@ -220,6 +169,46 @@ local NotePrompt = Main.NotePrompt
 Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
 
+local function AdjustUISizeForMobile()
+    if isMobile then
+        Main.Size = UDim2.new(0.6, 0, 0.6, 0) -- Smaller size for mobile
+    else
+        Main.Size = UDim2.new(1, 0, 1, 0) -- Original size for PC
+    end
+end
+
+local function AddMobileDragging(DragPoint, Main)
+    if isMobile then
+        local dragging, dragInput, startPos, dragStart = false, nil, nil, nil
+
+        DragPoint.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                dragStart = input.Position
+                startPos = Main.Position
+            end
+        end)
+
+        DragPoint.InputChanged:Connect(function(input)
+            if dragging and input.UserInputType == Enum.UserInputType.Touch then
+                dragInput = input
+            end
+        end)
+
+        game:GetService("UserInputService").InputChanged:Connect(function(input)
+            if dragging and input == dragInput then
+                local delta = input.Position - dragStart
+                Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+
+        DragPoint.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
+            end
+        end)
+    end
+end
 
 --Variables
 
@@ -361,6 +350,8 @@ local neon = (function()  --Open sourced neon module
 		end
 	end
 
+AdjustUISizeForMobile()
+AddMobileDragging(Topbar, Main)
 
 	local binds = {}
 	local root = Instance.new('Folder', RootParent)
