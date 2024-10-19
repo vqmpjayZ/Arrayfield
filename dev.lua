@@ -1,13 +1,5 @@
 --[[
-
-ArrayField Interface Suite
-by Arrays
-
-Original by Sirius
-
--------------------------------
-Arrays  | Designing + Programming + New Features
-
+ayo, version checkkk v1.2.3
 ]]
 
 
@@ -115,7 +107,7 @@ local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = game:GetService('Players').LocalPlayer
-local TextService = game:GetService("TextService") 
+local TextService = game:GetService("TextService")
 -- Interface Management
 local Rayfield = game:GetObjects("rbxassetid://11637506633")[1]
 
@@ -168,6 +160,22 @@ local NotePrompt = Main.NotePrompt
 
 Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
+
+if isMobile then
+    local scaleFactor = 0.7 -- Adjust this value to control how much smaller the UI should be on mobile
+    local function ScaleUIForMobile()
+        for _, uiElement in ipairs(Rayfield:GetDescendants()) do
+            if uiElement:IsA("GuiObject") then
+                -- Scale the size
+                uiElement.Size = UDim2.new(uiElement.Size.X.Scale * scaleFactor, uiElement.Size.X.Offset * scaleFactor, uiElement.Size.Y.Scale * scaleFactor, uiElement.Size.Y.Offset * scaleFactor)
+                -- Scale the position
+                uiElement.Position = UDim2.new(uiElement.Position.X.Scale * scaleFactor, uiElement.Position.X.Offset * scaleFactor, uiElement.Position.Y.Scale * scaleFactor, uiElement.Position.Y.Offset * scaleFactor)
+            end
+        end
+    end
+
+    ScaleUIForMobile() -- Apply scaling when detected
+end
 
 -- // Bit more mobile support
 
