@@ -10,6 +10,8 @@ Arrays  | Designing + Programming + New Features
 
 ]]
 
+
+
 local Release = "Release 1B"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
@@ -105,9 +107,7 @@ local RayfieldLibrary = {
 
 
 -- Services
-
-local UserInputService = game:GetService("UserInputService")
-local isMobile = UserInputService.TouchEnabled
+local isMobile = game:GetService("UserInputService").TouchEnabled
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
@@ -169,38 +169,36 @@ local NotePrompt = Main.NotePrompt
 Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
 
-function Rayfield:AdjustUISizeForMobile(ui)
-    if isMobile then
-        ui.Size = UDim2.new(ui.Size.X.Scale * 0.7, 0, ui.Size.Y.Scale * 0.7, 0)
-        for _, child in pairs(ui:GetDescendants()) do
-            if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
-                child.TextSize = child.TextSize * 0.7
-            end
-        end
-    end
-end
+-- // Bit more mobile support
 
-function Rayfield:MakeUIDraggable(ui)
+local function AddMobileDragging(DragPoint, Main)
     if isMobile then
-        local dragToggle, dragStart, startPos
+        local dragging, dragInput, startPos, dragStart = false, nil, nil, nil
 
-        ui.InputBegan:Connect(function(input)
+        DragPoint.InputBegan:Connect(function(input)
             if input.UserInputType == Enum.UserInputType.Touch then
-                dragToggle = true
+                dragging = true
                 dragStart = input.Position
-                startPos = ui.Position
-                input.Changed:Connect(function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragToggle = false
-                    end
-                end)
+                startPos = Main.Position
             end
         end)
 
-        ui.InputChanged:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch and dragToggle then
+        DragPoint.InputChanged:Connect(function(input)
+            if dragging and input.UserInputType == Enum.UserInputType.Touch then
+                dragInput = input
+            end
+        end)
+
+        game:GetService("UserInputService").InputChanged:Connect(function(input)
+            if dragging and input == dragInput then
                 local delta = input.Position - dragStart
-                ui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+                Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+
+        DragPoint.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
             end
         end)
     end
@@ -346,6 +344,9 @@ local neon = (function()  --Open sourced neon module
 		end
 	end
 
+AdjustUISizeForMobile()
+ResizeUIElementsForMobile()
+AddMobileDragging(Topbar, Main)
 
 	local binds = {}
 	local root = Instance.new('Folder', RootParent)
@@ -436,9 +437,6 @@ local neon = (function()  --Open sourced neon module
 			parts[3], parts[4] = DrawTriangle(v3, v2, v4, parts[3], parts[4])
 		end
 	end
-
-self:AdjustUISizeForMobile(Frame)
-self:MakeUIDraggable(Frame)
 
 	function module:BindFrame(frame, properties)
 		if RootParent == nil then return end
