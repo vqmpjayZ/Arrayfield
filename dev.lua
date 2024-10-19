@@ -1,8 +1,6 @@
 --[[
-ayo, version checkkk v1.2.3
+ayo, version checkkk v1.2.4
 ]]
-
-
 
 local Release = "Release 1B"
 local NotificationDuration = 6.5
@@ -352,8 +350,6 @@ local neon = (function()  --Open sourced neon module
 		end
 	end
 
-AdjustUISizeForMobile()
-ResizeUIElementsForMobile()
 AddMobileDragging(Topbar, Main)
 
 	local binds = {}
