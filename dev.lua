@@ -10,46 +10,6 @@ Arrays  | Designing + Programming + New Features
 
 ]]
 
-local UserInputService = game:GetService("UserInputService")
-local isMobile = UserInputService.TouchEnabled
-
-local function AdjustUISizeForMobile(ui)
-    if isMobile then
-        ui.Size = UDim2.new(ui.Size.X.Scale * 0.7, 0, ui.Size.Y.Scale * 0.7, 0)
-        for _, child in pairs(ui:GetDescendants()) do
-            if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
-                child.TextSize = child.TextSize * 0.7
-            end
-        end
-    end
-end
-
-local function MakeUIDraggable(ui)
-    if isMobile then
-        local dragToggle, dragStart, startPos
-
-        ui.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch then
-                dragToggle = true
-                dragStart = input.Position
-                startPos = ui.Position
-                input.Changed:Connect(function()
-                    if input.UserInputState == Enum.UserInputState.End then
-                        dragToggle = false
-                    end
-                end)
-            end
-        end)
-
-        ui.InputChanged:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch and dragToggle then
-                local delta = input.Position - dragStart
-                ui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-            end
-        end)
-    end
-end
-
 local Release = "Release 1B"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
@@ -147,6 +107,8 @@ local RayfieldLibrary = {
 -- Services
 
 local UserInputService = game:GetService("UserInputService")
+local isMobile = UserInputService.TouchEnabled
+local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
 local RunService = game:GetService("RunService")
@@ -207,6 +169,42 @@ local NotePrompt = Main.NotePrompt
 Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
 
+function Rayfield:AdjustUISizeForMobile(ui)
+    if isMobile then
+        ui.Size = UDim2.new(ui.Size.X.Scale * 0.7, 0, ui.Size.Y.Scale * 0.7, 0)
+        for _, child in pairs(ui:GetDescendants()) do
+            if child:IsA("TextLabel") or child:IsA("TextButton") or child:IsA("TextBox") then
+                child.TextSize = child.TextSize * 0.7
+            end
+        end
+    end
+end
+
+function Rayfield:MakeUIDraggable(ui)
+    if isMobile then
+        local dragToggle, dragStart, startPos
+
+        ui.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch then
+                dragToggle = true
+                dragStart = input.Position
+                startPos = ui.Position
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        dragToggle = false
+                    end
+                end)
+            end
+        end)
+
+        ui.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch and dragToggle then
+                local delta = input.Position - dragStart
+                ui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            end
+        end)
+    end
+end
 
 --Variables
 
@@ -438,6 +436,9 @@ local neon = (function()  --Open sourced neon module
 			parts[3], parts[4] = DrawTriangle(v3, v2, v4, parts[3], parts[4])
 		end
 	end
+
+self:AdjustUISizeForMobile(Frame)
+self:MakeUIDraggable(Frame)
 
 	function module:BindFrame(frame, properties)
 		if RootParent == nil then return end
@@ -3709,5 +3710,3 @@ end
 task.delay(9, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
 
 return RayfieldLibrary
-AdjustUISizeForMobile(yourExistingUI)
-MakeUIDraggable(yourExistingUI)
