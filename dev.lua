@@ -171,9 +171,9 @@ LoadingFrame.Version.Text = Release
 
 local function AdjustUISizeForMobile()
     if isMobile then
-        Main.Size = UDim2.new(0.5, 0, 0.5, 0) -- Smaller size for mobile
+        Main.Size = UDim2.new(Main.Size.X.Scale * 0.7, Main.Size.X.Offset * 0.7, Main.Size.Y.Scale * 0.7, Main.Size.Y.Offset * 0.7)
     else
-        Main.Size = UDim2.new(1, 0, 1, 0) -- Original size for PC
+        Main.Size = UDim2.new(1, 0, 1, 0)
     end
 end
 
