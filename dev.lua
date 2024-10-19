@@ -181,49 +181,14 @@ local function ResizeUIElementsForMobile()
     if isMobile then
         for _, element in pairs(Main:GetDescendants()) do
             if element:IsA("TextButton") or element:IsA("TextLabel") or element:IsA("Frame") then
-                -- Scale down the size and position of each element for mobile
                 element.Size = UDim2.new(element.Size.X.Scale * 0.7, element.Size.X.Offset * 0.7, element.Size.Y.Scale * 0.7, element.Size.Y.Offset * 0.7)
                 element.Position = UDim2.new(element.Position.X.Scale, element.Position.X.Offset * 0.7, element.Position.Y.Scale, element.Position.Y.Offset * 0.7)
                 
-                -- Reduce font size for text elements
                 if element:IsA("TextLabel") or element:IsA("TextButton") then
                     element.TextSize = element.TextSize * 0.7
                 end
             end
         end
-    end
-end
-
-local function AddMobileDragging(DragPoint, Main)
-    if isMobile then
-        local dragging, dragInput, startPos, dragStart = false, nil, nil, nil
-
-        DragPoint.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch then
-                dragging = true
-                dragStart = input.Position
-                startPos = Main.Position
-            end
-        end)
-
-        DragPoint.InputChanged:Connect(function(input)
-            if dragging and input.UserInputType == Enum.UserInputType.Touch then
-                dragInput = input
-            end
-        end)
-
-        game:GetService("UserInputService").InputChanged:Connect(function(input)
-            if dragging and input == dragInput then
-                local delta = input.Position - dragStart
-                Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-            end
-        end)
-
-        DragPoint.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch then
-                dragging = false
-            end
-        end)
     end
 end
 
