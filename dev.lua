@@ -7,7 +7,7 @@ Original by Sirius
 
 -------------------------------
 Arrays  | Designing + Programming + New Features
-
+v3
 ]]
 
 
@@ -171,20 +171,26 @@ LoadingFrame.Version.Text = Release
 
 local function AdjustUISizeForMobile()
     if isMobile then
-        -- Scale down the entire main UI
+        -- Adjust the main frame and its background
+        Main.Size = UDim2.new(Main.Size.X.Scale * 0.7, Main.Size.X.Offset * 0.7, Main.Size.Y.Scale * 0.7, Main.Size.Y.Offset * 0.7)
+        
+        -- If there's a specific background frame, scale it down too
+        if Background then
+            Background.Size = UDim2.new(Background.Size.X.Scale * 0.7, Background.Size.X.Offset * 0.7, Background.Size.Y.Scale * 0.7, Background.Size.Y.Offset * 0.7)
+        end
+        
+        -- Scale down all other elements
         for _, element in pairs(Main:GetDescendants()) do
             if element:IsA("GuiObject") then
-                -- Scale down the size and position of each element for mobile
                 element.Size = UDim2.new(element.Size.X.Scale * 0.7, element.Size.X.Offset * 0.7, element.Size.Y.Scale * 0.7, element.Size.Y.Offset * 0.7)
                 element.Position = UDim2.new(element.Position.X.Scale, element.Position.X.Offset * 0.7, element.Position.Y.Scale, element.Position.Y.Offset * 0.7)
             end
         end
     else
-        -- For PC, keep the original size
+        -- Keep original size for PC
         Main.Size = UDim2.new(1, 0, 1, 0)
     end
 end
-
 
 local function ResizeUIElementsForMobile()
     if isMobile then
