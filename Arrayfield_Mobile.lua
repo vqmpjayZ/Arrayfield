@@ -5,10 +5,11 @@ by Sirius
 
 shlex | Designing + Programming
 iRay  | Programming
+vqmpjay | Programming
 
 ]]
 
-
+--dsc.gg/vadriftz
 
 local Release = "Beta 8 Mobile"
 local NotificationDuration = 6.5
@@ -116,9 +117,6 @@ local CoreGui = game:GetService("CoreGui")
 
 -- Interface Management
 local Rayfield = RunService:IsStudio() and script.Parent or game:GetObjects("rbxassetid://14446298082")[1]
-print(Rayfield) 
-wait(1)
-print(Rayfield) 
 Rayfield.Enabled = false
 
 if game["Run Service"]:IsStudio() then
