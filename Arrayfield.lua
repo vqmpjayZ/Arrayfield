@@ -171,7 +171,7 @@ LoadingFrame.Version.Text = Release
 
 
 --Variables
-local scaleFactor = 0.7 -- Adjust this value to control the UI size on both PC and mobile
+local scaleFactor = 0.7 -- Adjust this value for scaling
 
 local function ScaleUI()
     -- Function to scale both size and position
@@ -179,24 +179,27 @@ local function ScaleUI()
         if uiElement:IsA("GuiObject") then
             -- Scale Size
             uiElement.Size = UDim2.new(uiElement.Size.X.Scale * scaleFactor, uiElement.Size.X.Offset * scaleFactor, uiElement.Size.Y.Scale * scaleFactor, uiElement.Size.Y.Offset * scaleFactor)
-            
+
             -- Scale Position
             uiElement.Position = UDim2.new(uiElement.Position.X.Scale * scaleFactor, uiElement.Position.X.Offset * scaleFactor, uiElement.Position.Y.Scale * scaleFactor, uiElement.Position.Y.Offset * scaleFactor)
         end
     end
-    
-    -- Scale all descendants of the Rayfield UI
+
+    -- Scale all descendants of the Rayfield UI, including the main container
     for _, uiElement in ipairs(Rayfield:GetDescendants()) do
         ScaleElement(uiElement)
     end
-    
-    -- Specifically scale Main and Topbar if needed
+
+    -- Specifically scale Main and Topbar if they need extra attention
     ScaleElement(Main)
     ScaleElement(Topbar)
+
+    -- Ensure Main container's AnchorPoint is centered to fix the position issue
+    Main.AnchorPoint = Vector2.new(0.5, 0.5)
+    Main.Position = UDim2.new(0.5, 0, 0.5, 0) -- Center the Main container
 end
 
 ScaleUI() -- Apply scaling for both PC and mobile
-
 
 local request = (syn and syn.request) or (http and http.request) or http_request
 local CFileName = nil
