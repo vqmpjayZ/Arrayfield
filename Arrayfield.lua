@@ -11,13 +11,6 @@ Arrays  | Designing + Programming + New Features
 ]]
 
 
-local UserInputService = game:GetService("UserInputService")
-
-local isMobile = UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled
-
-if isMobile then
-    return loadstring(game:HttpGet("https://raw.githubusercontent.com/vqmpjayZ/Arrayfield/refs/heads/main/Arrayfield_Mobile.lua"))()
-else
 
 local Release = "Release 1B"
 local NotificationDuration = 6.5
@@ -114,7 +107,7 @@ local RayfieldLibrary = {
 
 
 -- Services
-local isMobile = game:GetService("UserInputService").TouchEnabled
+
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
@@ -122,7 +115,7 @@ local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local LocalPlayer = game:GetService('Players').LocalPlayer
-local TextService = game:GetService("TextService")
+local TextService = game:GetService("TextService") 
 -- Interface Management
 local Rayfield = game:GetObjects("rbxassetid://11637506633")[1]
 
@@ -176,40 +169,6 @@ local NotePrompt = Main.NotePrompt
 Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
 
--- // Bit more mobile support
-
-local function AddMobileDragging(DragPoint, Main)
-    if isMobile then
-        local dragging, dragInput, startPos, dragStart = false, nil, nil, nil
-
-        DragPoint.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch then
-                dragging = true
-                dragStart = input.Position
-                startPos = Main.Position
-            end
-        end)
-
-        DragPoint.InputChanged:Connect(function(input)
-            if dragging and input.UserInputType == Enum.UserInputType.Touch then
-                dragInput = input
-            end
-        end)
-
-        game:GetService("UserInputService").InputChanged:Connect(function(input)
-            if dragging and input == dragInput then
-                local delta = input.Position - dragStart
-                Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-            end
-        end)
-
-        DragPoint.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.Touch then
-                dragging = false
-            end
-        end)
-    end
-end
 
 --Variables
 
@@ -351,9 +310,6 @@ local neon = (function()  --Open sourced neon module
 		end
 	end
 
-AdjustUISizeForMobile()
-ResizeUIElementsForMobile()
-AddMobileDragging(Topbar, Main)
 
 	local binds = {}
 	local root = Instance.new('Folder', RootParent)
@@ -3715,4 +3671,3 @@ end
 task.delay(9, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
 
 return RayfieldLibrary
-end
