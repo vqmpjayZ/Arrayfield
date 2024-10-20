@@ -7,7 +7,7 @@ Original by Sirius
 
 -------------------------------
 Arrays  | Designing + Programming + New Features
-v2
+
 ]]
 
 
@@ -171,50 +171,6 @@ LoadingFrame.Version.Text = Release
 
 
 --Variables
-local scaleFactor = 0.7 -- Adjust this value for scaling down
-
-local function ScaleUI()
-    -- Function to scale both size and position
-    local function ScaleElement(uiElement)
-        if uiElement:IsA("GuiObject") then
-            -- Scale Size
-            uiElement.Size = UDim2.new(
-                uiElement.Size.X.Scale * scaleFactor, -- Scale the scale part
-                uiElement.Size.X.Offset * scaleFactor, -- Scale the offset part
-                uiElement.Size.Y.Scale * scaleFactor, 
-                uiElement.Size.Y.Offset * scaleFactor
-            )
-
-            -- Scale Position
-            uiElement.Position = UDim2.new(
-                uiElement.Position.X.Scale * scaleFactor, 
-                uiElement.Position.X.Offset * scaleFactor, 
-                uiElement.Position.Y.Scale * scaleFactor, 
-                uiElement.Position.Y.Offset * scaleFactor
-            )
-        end
-    end
-
-    -- Recursively scale all descendants of the main container
-    local function RecursiveScale(container)
-        ScaleElement(container)
-        for _, child in ipairs(container:GetChildren()) do
-            RecursiveScale(child)
-        end
-    end
-
-    -- Apply the scaling to the Main container and its children
-    RecursiveScale(Main)
-    
-    -- Also scale the Topbar
-    ScaleElement(Topbar)
-
-    -- Ensure Main container's AnchorPoint is centered to fix the position issue
-    Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.Position = UDim2.new(0.5, 0, 0.5, 0) -- Keep the Main container centered
-end
-
-ScaleUI() -- Apply scaling
 
 local request = (syn and syn.request) or (http and http.request) or http_request
 local CFileName = nil
