@@ -270,7 +270,7 @@ local function LoadConfiguration(Configuration)
 				end    
 			end)
 		else
-			Rayfield:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
+			RayfieldLibrary:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
 		end
 	end
 end
@@ -509,7 +509,7 @@ local neon = (function()  --Open sourced neon module
 
 end)()
 
-function Rayfield:Notify(NotificationSettings)
+function RayfieldLibrary:Notify(NotificationSettings)
 	spawn(function()
 		local ActionCompleted = true
 		local Notification = Notifications.Template:Clone()
@@ -640,7 +640,7 @@ function Hide()
 		TweenService:Create(Rayfield.MobileButton.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 	else
 		TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 400)}):Play()
-		Rayfield:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping "..RayfieldLibrary.MenuKeybind.Name, Duration = 7})
+		RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping "..RayfieldLibrary.MenuKeybind.Name, Duration = 7})
 	end
 	
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 45)}):Play()
@@ -905,7 +905,7 @@ end
 Main.BottomBar.Visible = false
 Rayfield.MobileButton.Visible = false
 
-function Rayfield:CreateWindow(Settings)
+function RayfieldLibrary:CreateWindow(Settings)
 	local Passthrough = false
 	Topbar.Title.Text = Settings.Name
 	Main.Size = UDim2.new(0, 450, 0, 260)
@@ -1119,7 +1119,7 @@ function Rayfield:CreateWindow(Settings)
 						if writefile then
 							writefile(RayfieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension, FoundKey)
 						end
-						Rayfield:Notify({Title = "Key System", Content = "The key for this script has been saved successfully"})
+						RayfieldLibrary:Notify({Title = "Key System", Content = "The key for this script has been saved successfully"})
 					end
 				else
 					if AttemptsRemaining == 0 then
@@ -1165,7 +1165,7 @@ function Rayfield:CreateWindow(Settings)
 				TweenService:Create(KeyMain.NoteMessage, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
 				TweenService:Create(KeyMain.Hide, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
 				wait(0.51)
-				Rayfield:Destroy()
+				RayfieldLibrary:Destroy()
 				KeyUI:Destroy()
 			end)
 		else
@@ -2484,7 +2484,7 @@ function Rayfield:CreateWindow(Settings)
 end
 
 
-function Rayfield:Destroy()
+function RayfieldLibrary:Destroy()
 	Rayfield:Destroy()
 end
 
@@ -2547,18 +2547,19 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 end
 
 
-function Rayfield:LoadConfiguration()
+function RayfieldLibrary:LoadConfiguration()
 	if CEnabled then
 		pcall(function()
 			if isfile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension) then
 				LoadConfiguration(readfile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension))
-				Rayfield:Notify({Title = "Configuration Loaded", Content = "The configuration file for this script has been loaded from a previous session"})
+				RayfieldLibrary:Notify({Title = "Configuration Loaded", Content = "The configuration file for this script has been loaded from a previous session"})
 			end
 		end)
 	end
 end
 
---[[task.delay(3.5, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
+--[[
+task.delay(3.5, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
 
 local Window = RayfieldLibrary:CreateWindow({
 	Name = "Rayfield Mobile",
@@ -2589,7 +2590,7 @@ local Window = RayfieldLibrary:CreateWindow({
 local Tab = Window:CreateTab("Tab Example", 4483362458) 
 local Section = Tab:CreateSection("Section Example")
 
-Rayfield:Notify({
+RayfieldLibrary:Notify({
 	Title = "Welcome",
 	Content = "Notification Content",
 	Duration = 6.5,
@@ -2664,5 +2665,4 @@ local Dropdown = Tab:CreateDropdown({
 		-- The function that takes place when the selected option is changed
 		-- The variable (Option) is a table of strings for the current selected options
 	end,
-})
-]]
+})]]
