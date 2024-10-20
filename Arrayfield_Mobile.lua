@@ -18,7 +18,7 @@ local ConfigurationExtension = ".rfld"
 
 local MobileEnabled = false
 
-local Rayfield = {
+local RayfieldLibrary = {
 	Flags = {},
 	MenuKeybind = Enum.KeyCode.Delete,
 	Theme = {
@@ -183,10 +183,10 @@ local Hidden = false
 local Debounce = false
 local Notifications = Rayfield.Notifications
 
-local SelectedTheme = Rayfield.Theme.Default
+local SelectedTheme = RayfieldLibrary.Theme.Default
 
 function ChangeTheme(ThemeName)
-	SelectedTheme = Rayfield.Theme[ThemeName]
+	SelectedTheme = RayfieldLibrary.Theme[ThemeName]
 	for _, obj in ipairs(Rayfield:GetDescendants()) do
 		if obj.ClassName == "TextLabel" or obj.ClassName == "TextBox" or obj.ClassName == "TextButton" then
 			if SelectedTheme.TextFont ~= "Default" then 
@@ -261,16 +261,16 @@ end
 local function LoadConfiguration(Configuration)
 	local Data = HttpService:JSONDecode(Configuration)
 	for FlagName, FlagValue in next, Data do
-		if Rayfield.Flags[FlagName] then
+		if RayfieldLibrary.Flags[FlagName] then
 			spawn(function() 
-				if Rayfield.Flags[FlagName].Type == "ColorPicker" then
-					Rayfield.Flags[FlagName]:Set(UnpackColor(FlagValue))
+				if RayfieldLibrary.Flags[FlagName].Type == "ColorPicker" then
+					RayfieldLibrary.Flags[FlagName]:Set(UnpackColor(FlagValue))
 				else
-					if Rayfield.Flags[FlagName].CurrentValue or Rayfield.Flags[FlagName].CurrentKeybind or Rayfield.Flags[FlagName].CurrentOption or Rayfield.Flags[FlagName].Color ~= FlagValue then Rayfield.Flags[FlagName]:Set(FlagValue) end
+					if RayfieldLibrary.Flags[FlagName].CurrentValue or RayfieldLibrary.Flags[FlagName].CurrentKeybind or RayfieldLibrary.Flags[FlagName].CurrentOption or RayfieldLibrary.Flags[FlagName].Color ~= FlagValue then RayfieldLibrary.Flags[FlagName]:Set(FlagValue) end
 				end    
 			end)
 		else
-			Rayfield:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
+			RayfieldLibrary:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
 		end
 	end
 end
@@ -278,7 +278,7 @@ end
 local function SaveConfiguration()
 	if not CEnabled then return end
 	local Data = {}
-	for i,v in pairs(Rayfield.Flags) do
+	for i,v in pairs(RayfieldLibrary.Flags) do
 		if v.Type == "ColorPicker" then
 			Data[i] = PackColor(v.Color)
 		else
@@ -509,7 +509,7 @@ local neon = (function()  --Open sourced neon module
 
 end)()
 
-function Rayfield:Notify(NotificationSettings)
+function RayfieldLibrary:Notify(NotificationSettings)
 	spawn(function()
 		local ActionCompleted = true
 		local Notification = Notifications.Template:Clone()
@@ -526,7 +526,7 @@ function Rayfield:Notify(NotificationSettings)
 				ActionCompleted = false
 				local NewAction = Notification.Actions.Template:Clone()
 				NewAction.BackgroundColor3 = SelectedTheme.NotificationActionsBackground
-				if SelectedTheme ~= Rayfield.Theme.Default then
+				if SelectedTheme ~= RayfieldLibrary.Theme.Default then
 					NewAction.TextColor3 = SelectedTheme.TextColor
 				end
 				NewAction.Name = Action.Name
@@ -640,7 +640,7 @@ function Hide()
 		TweenService:Create(Rayfield.MobileButton.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 	else
 		TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 400)}):Play()
-		Rayfield:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping "..Rayfield.MenuKeybind.Name, Duration = 7})
+		RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping "..RayfieldLibrary.MenuKeybind.Name, Duration = 7})
 	end
 	
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 45)}):Play()
@@ -905,7 +905,7 @@ end
 Main.BottomBar.Visible = false
 Rayfield.MobileButton.Visible = false
 
-function Rayfield:CreateWindow(Settings)
+function RayfieldLibrary:CreateWindow(Settings)
 	local Passthrough = false
 	Topbar.Title.Text = Settings.Name
 	Main.Size = UDim2.new(0, 450, 0, 260)
@@ -1119,7 +1119,7 @@ function Rayfield:CreateWindow(Settings)
 						if writefile then
 							writefile(RayfieldFolder.."/Key System".."/"..Settings.KeySettings.FileName..ConfigurationExtension, FoundKey)
 						end
-						Rayfield:Notify({Title = "Key System", Content = "The key for this script has been saved successfully"})
+						RayfieldLibrary:Notify({Title = "Key System", Content = "The key for this script has been saved successfully"})
 					end
 				else
 					if AttemptsRemaining == 0 then
@@ -1165,7 +1165,7 @@ function Rayfield:CreateWindow(Settings)
 				TweenService:Create(KeyMain.NoteMessage, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
 				TweenService:Create(KeyMain.Hide, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
 				wait(0.51)
-				Rayfield:Destroy()
+				RayfieldLibrary:Destroy()
 				KeyUI:Destroy()
 			end)
 		else
@@ -1246,7 +1246,7 @@ function Rayfield:CreateWindow(Settings)
 			Elements.UIPageLayout.Animated = true
 		end
 
-		if SelectedTheme ~= Rayfield.Theme.Default then
+		if SelectedTheme ~= RayfieldLibrary.Theme.Default then
 			TabButton.Shadow.Visible = false
 		end
 		TabButton.UIStroke.Color = SelectedTheme.TabStroke
@@ -1570,7 +1570,7 @@ function Rayfield:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and ColorPickerSettings.Flag then
-					Rayfield.Flags[ColorPickerSettings.Flag] = ColorPickerSettings
+					RayfieldLibrary.Flags[ColorPickerSettings.Flag] = ColorPickerSettings
 				end
 			end
 
@@ -2004,7 +2004,7 @@ function Rayfield:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and DropdownSettings.Flag then
-					Rayfield.Flags[DropdownSettings.Flag] = DropdownSettings
+					RayfieldLibrary.Flags[DropdownSettings.Flag] = DropdownSettings
 				end
 			end
 
@@ -2057,7 +2057,7 @@ function Rayfield:CreateWindow(Settings)
 			UserInputService.InputBegan:Connect(function(input, processed)
 
 				if CheckingForKey then
-					if input.KeyCode ~= Enum.KeyCode.Unknown and input.KeyCode ~= Rayfield.MenuKeybind then
+					if input.KeyCode ~= Enum.KeyCode.Unknown and input.KeyCode ~= RayfieldLibrary.MenuKeybind then
 						local SplitMessage = string.split(tostring(input.KeyCode), ".")
 						local NewKeyNoEnum = SplitMessage[3]
 						Keybind.KeybindFrame.KeybindBox.Text = tostring(NewKeyNoEnum)
@@ -2115,7 +2115,7 @@ function Rayfield:CreateWindow(Settings)
 			end
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and KeybindSettings.Flag then
-					Rayfield.Flags[KeybindSettings.Flag] = KeybindSettings
+					RayfieldLibrary.Flags[KeybindSettings.Flag] = KeybindSettings
 				end
 			end
 			return KeybindSettings
@@ -2136,7 +2136,7 @@ function Rayfield:CreateWindow(Settings)
 			Toggle.Title.TextTransparency = 1
 			Toggle.Switch.BackgroundColor3 = SelectedTheme.ToggleBackground
 
-			if SelectedTheme ~= Rayfield.Theme.Default then
+			if SelectedTheme ~= RayfieldLibrary.Theme.Default then
 				Toggle.Switch.Shadow.Visible = false
 			end
 
@@ -2261,7 +2261,7 @@ function Rayfield:CreateWindow(Settings)
 
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and ToggleSettings.Flag then
-					Rayfield.Flags[ToggleSettings.Flag] = ToggleSettings
+					RayfieldLibrary.Flags[ToggleSettings.Flag] = ToggleSettings
 				end
 			end
 
@@ -2281,7 +2281,7 @@ function Rayfield:CreateWindow(Settings)
 			Slider.UIStroke.Transparency = 1
 			Slider.Title.TextTransparency = 1
 
-			if SelectedTheme ~= Rayfield.Theme.Default then
+			if SelectedTheme ~= RayfieldLibrary.Theme.Default then
 				Slider.Main.Shadow.Visible = false
 			end
 
@@ -2403,7 +2403,7 @@ function Rayfield:CreateWindow(Settings)
 			end
 			if Settings.ConfigurationSaving then
 				if Settings.ConfigurationSaving.Enabled and SliderSettings.Flag then
-					Rayfield.Flags[SliderSettings.Flag] = SliderSettings
+					RayfieldLibrary.Flags[SliderSettings.Flag] = SliderSettings
 				end
 			end
 			return SliderSettings
@@ -2484,7 +2484,7 @@ function Rayfield:CreateWindow(Settings)
 end
 
 
-function Rayfield:Destroy()
+function RayfieldLibrary:Destroy()
 	Rayfield:Destroy()
 end
 
@@ -2518,7 +2518,7 @@ Topbar.Hide.MouseButton1Click:Connect(function()
 end)
 
 UserInputService.InputBegan:Connect(function(input, processed)
-	if (input.KeyCode == Rayfield.MenuKeybind and not processed) then
+	if (input.KeyCode == RayfieldLibrary.MenuKeybind and not processed) then
 		if Debounce then return end
 		if Hidden then
 			Hidden = false
@@ -2547,13 +2547,15 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 end
 
 
-function Rayfield:LoadConfiguration()
+function RayfieldLibrary:LoadConfiguration()
 	if CEnabled then
 		pcall(function()
 			if isfile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension) then
 				LoadConfiguration(readfile(ConfigurationFolder .. "/" .. CFileName .. ConfigurationExtension))
-				Rayfield:Notify({Title = "Configuration Loaded", Content = "The configuration file for this script has been loaded from a previous session"})
+				RayfieldLibrary:Notify({Title = "Configuration Loaded", Content = "The configuration file for this script has been loaded from a previous session"})
 			end
 		end)
 	end
 end
+
+return RayfieldLibrary
