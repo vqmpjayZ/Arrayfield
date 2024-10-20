@@ -2558,7 +2558,6 @@ function RayfieldLibrary:LoadConfiguration()
 	end
 end
 
---[[
 task.delay(3.5, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
 
 local Window = RayfieldLibrary:CreateWindow({
@@ -2665,4 +2664,4 @@ local Dropdown = Tab:CreateDropdown({
 		-- The function that takes place when the selected option is changed
 		-- The variable (Option) is a table of strings for the current selected options
 	end,
-})]]
+})
