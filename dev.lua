@@ -1,13 +1,5 @@
 --[[
-
-ArrayField Interface Suite
-by Arrays
-
-Original by Sirius
-
--------------------------------
-Arrays  | Designing + Programming + New Features
-
+h
 ]]
 
 
@@ -204,7 +196,7 @@ function ChangeTheme(ThemeName)
 
 	Rayfield.Main.Topbar.ChangeSize.ImageColor3 = SelectedTheme.TextColor
 	Rayfield.Main.Topbar.Hide.ImageColor3 = SelectedTheme.TextColor
-	Rayfield.Main.Topbar.Theme.ImageColor3 = SelectedTheme.TextColor
+--	Rayfield.Main.Topbar.Theme.ImageColor3 = SelectedTheme.TextColor
 
 	for _, TabPage in ipairs(Elements:GetChildren()) do
 		for _, Element in ipairs(TabPage:GetChildren()) do
@@ -3656,7 +3648,6 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 		end)
 	end
 end
-					ununusedoption:Destroy()
 
 function RayfieldLibrary:LoadConfiguration()
 	if CEnabled then
