@@ -1,5 +1,13 @@
 --[[
-h
+
+ArrayField Interface Suite
+by Arrays
+
+Original by Sirius
+
+-------------------------------
+Arrays  | Designing + Programming + New Features
+
 ]]
 
 
@@ -3660,5 +3668,13 @@ function RayfieldLibrary:LoadConfiguration()
 	end
 end
 task.delay(9, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
+
+for _, child in ipairs(Topbar:GetChildren()) do
+    if child:IsA("ImageButton") then
+        child.MouseButton1Click:Connect(function()
+            print("Clicked:", child.Name)
+        end)
+    end
+end
 
 return RayfieldLibrary
