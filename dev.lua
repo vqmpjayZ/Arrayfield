@@ -2548,7 +2548,8 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
         end
     end
     
-    
+    Rayfield.Main.Topbar.Theme.Visible = false
+
     function RayfieldLibrary:LoadConfiguration()
         if CEnabled then
             pcall(function()
