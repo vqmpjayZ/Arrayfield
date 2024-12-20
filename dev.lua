@@ -1,11 +1,6 @@
 --[[
 
-Rayfield Interface Suite
-by Sirius
-
-shlex | Designing + Programming
-iRay  | Programming
-vxmpjay | Programming
+Luice implant test
 
 ]]
 
@@ -246,22 +241,33 @@ local function AddDraggingFunctionality(DragPoint, Main)
 	end)
 end   
 
-local function getIcon(name)
-    name = string.lower(name):gsub("^%s*(.-)%s*$", "%1") -- Normalize the name
-    local sizedicons = Icons['48px'] -- Assuming you want 48px icons
+local function getIcon(name : string)
+	name = string.match(string.lower(name), "^%s*(.*)%s*$") :: string
+	local sizedicons = Icons['48px']
 
-    local iconData = sizedicons[name]
-    if not iconData then
-        error("Icon not found: " .. name)
-    end
+	local r = sizedicons[name]
+	if not r then
+		error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
+	end
 
-    return {
-        id = iconData[1],
-        imageRectSize = Vector2.new(iconData[2][1], iconData[2][2]),
-        imageRectOffset = Vector2.new(iconData[3][1], iconData[3][2]),
-    }
+	local rirs = r[2]
+	local riro = r[3]
+
+	if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
+		error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+	end
+
+	local irs = Vector2.new(rirs[1], rirs[2])
+	local iro = Vector2.new(riro[1], riro[2])
+
+	local asset = {
+		id = r[1],
+		imageRectSize = irs,
+		imageRectOffset = iro,
+	}
+
+	return asset
 end
-
 
 local function FadeDescription(Infos)
 
@@ -614,147 +620,100 @@ function ClosePrompt()
 	wait(.5)
 	Prompt.Visible = false
 end
-function RayfieldLibrary:Notify(NotificationSettings)
-	spawn(function()
-		local ActionCompleted = true
-		local Notification = Notifications.Template:Clone()
-		Notification.Parent = Notifications
-		Notification.Name = NotificationSettings.Title or "Unknown Title"
-		Notification.Visible = true
+function RayfieldLibrary:Notify(data) -- action e.g open messages
+	task.spawn(function()
 
-		local blurlight = nil
-		if not false then
-			blurlight = Instance.new("DepthOfFieldEffect",game:GetService("Lighting"))
-			blurlight.Enabled = true
-			blurlight.FarIntensity = 0
-			blurlight.FocusDistance = 51.6
-			blurlight.InFocusRadius = 50
-			blurlight.NearIntensity = 1
-			game:GetService("Debris"):AddItem(script,0)
-		end
+		-- Notification Object Creation
+		local newNotification = Notifications.Template:Clone()
+		newNotification.Name = data.Title or 'No Title Provided'
+		newNotification.Parent = Notifications
+		newNotification.LayoutOrder = #Notifications:GetChildren()
+		newNotification.Visible = false
 
-		Notification.Actions.Template.Visible = false
+		-- Set Data
+		newNotification.Title.Text = data.Title or "Unknown Title"
+		newNotification.Description.Text = data.Content or "Unknown Content"
 
-		if NotificationSettings.Actions then
-			for _, Action in pairs(NotificationSettings.Actions) do
-				ActionCompleted = false
-				local NewAction = Notification.Actions.Template:Clone()
-				NewAction.BackgroundColor3 = SelectedTheme.NotificationActionsBackground
-				if SelectedTheme ~= RayfieldLibrary.Theme.Default then
-					NewAction.TextColor3 = SelectedTheme.TextColor
-				end
-				NewAction.Name = Action.Name
-				NewAction.Visible = true
-				NewAction.Parent = Notification.Actions
-				NewAction.Text = Action.Name
-				NewAction.BackgroundTransparency = 1
-				NewAction.TextTransparency = 1
-				NewAction.Size = UDim2.new(0, NewAction.TextBounds.X + 27, 0, 36)
+		if data.Image then
+			if typeof(data.Image) == 'string' then
+				local asset = getIcon(data.Image)
 
-				NewAction.MouseButton1Click:Connect(function()
-					local Success, Response = pcall(Action.Callback)
-					if not Success then
-						print("Rayfield | Action: "..Action.Name.." Callback Error " ..tostring(Response))
-					end
-					ActionCompleted = true
-				end)
+				newNotification.Icon.Image = 'rbxassetid://'..asset.id
+				newNotification.Icon.ImageRectOffset = asset.imageRectOffset
+				newNotification.Icon.ImageRectSize = asset.imageRectSize
+			else
+				newNotification.Icon.Image = "rbxassetid://" .. (data.Image or 0)
 			end
-		end
-		Notification.BackgroundColor3 = SelectedTheme.Background
-		Notification.Title.Text = NotificationSettings.Title or "Unknown"
-		Notification.Title.TextTransparency = 1
-		Notification.Title.TextColor3 = SelectedTheme.TextColor
-		Notification.Description.Text = NotificationSettings.Content or "Unknown"
-		Notification.Description.TextTransparency = 1
-		Notification.Description.TextColor3 = SelectedTheme.TextColor
-		Notification.Icon.ImageColor3 = SelectedTheme.TextColor
-		if NotificationSettings.Image then
-			Notification.Icon.Image = "rbxassetid://"..tostring(NotificationSettings.Image) 
 		else
-			Notification.Icon.Image = "rbxassetid://3944680095"
+			newNotification.Icon.Image = "rbxassetid://" .. 0
 		end
 
-		Notification.Icon.ImageTransparency = 1
+		-- Set initial transparency values
 
-		Notification.Parent = Notifications
-		Notification.Size = UDim2.new(0, 260, 0, 80)
-		Notification.BackgroundTransparency = 1
+		newNotification.Title.TextColor3 = SelectedTheme.TextColor
+		newNotification.Description.TextColor3 = SelectedTheme.TextColor
+		newNotification.BackgroundColor3 = SelectedTheme.Background
+		newNotification.UIStroke.Color = SelectedTheme.TextColor
+		newNotification.Icon.ImageColor3 = SelectedTheme.TextColor
 
-		TweenService:Create(Notification, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 295, 0, 91)}):Play()
-		TweenService:Create(Notification, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.1}):Play()
-		Notification:TweenPosition(UDim2.new(0.5,0,0.915,0),'Out','Quint',0.8,true)
+		newNotification.BackgroundTransparency = 1
+		newNotification.Title.TextTransparency = 1
+		newNotification.Description.TextTransparency = 1
+		newNotification.UIStroke.Transparency = 1
+		newNotification.Shadow.ImageTransparency = 1
+		newNotification.Size = UDim2.new(1, 0, 0, 800)
+		newNotification.Icon.ImageTransparency = 1
+		newNotification.Icon.BackgroundTransparency = 1
 
-		wait(0.3)
-		TweenService:Create(Notification.Icon, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
-		TweenService:Create(Notification.Title, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-		TweenService:Create(Notification.Description, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.2}):Play()
-		wait(0.2)
+		task.wait()
 
+		newNotification.Visible = true
 
-
-		-- Requires Graphics Level 8-10
-		if false == nil then
-			TweenService:Create(Notification, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.4}):Play()
-		else
-			if not false then
-				TweenService:Create(Notification, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.4}):Play()
-			else 
-				TweenService:Create(Notification, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-			end
+		if data.Actions then
+			warn('Rayfield | Not seeing your actions in notifications?')
+			print("Notification Actions are being sunset for now, keep up to date on when they're back in the discord. (sirius.menu/discord)")
 		end
 
-		if Rayfield.Name == "Rayfield" then
-			neon:BindFrame(Notification.BlurModule, {
-				Transparency = 0.98;
-				BrickColor = BrickColor.new("Institutional white");
-			})
-		end
+		-- Calculate textbounds and set initial values
+		local bounds = {newNotification.Title.TextBounds.Y, newNotification.Description.TextBounds.Y}
+		newNotification.Size = UDim2.new(1, -60, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)
 
-		if not NotificationSettings.Actions then
-			wait(NotificationSettings.Duration or NotificationDuration - 0.5)
-		else
-			wait(0.8)
-			TweenService:Create(Notification, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 295, 0, 132)}):Play()
-			wait(0.3)
-			for _, Action in ipairs(Notification.Actions:GetChildren()) do
-				if Action.ClassName == "TextButton" and Action.Name ~= "Template" then
-					TweenService:Create(Action, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.2}):Play()
-					TweenService:Create(Action, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-					wait(0.05)
-				end
-			end
-		end
+		newNotification.Icon.Size = UDim2.new(0, 32, 0, 32)
+		newNotification.Icon.Position = UDim2.new(0, 20, 0.5, 0)
 
-		repeat wait(0.001) until ActionCompleted
+		TweenService:Create(newNotification, TweenInfo.new(0.6, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, 0, 0, math.max(bounds[1] + bounds[2] + 31, 60))}):Play()
 
-		for _, Action in ipairs(Notification.Actions:GetChildren()) do
-			if Action.ClassName == "TextButton" and Action.Name ~= "Template" then
-				TweenService:Create(Action, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
-				TweenService:Create(Action, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
-			end
-		end
+		task.wait(0.15)
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 0.45}):Play()
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0}):Play()
 
-		TweenService:Create(Notification.Title, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Position = UDim2.new(0.47, 0,0.234, 0)}):Play()
-		TweenService:Create(Notification.Description, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {Position = UDim2.new(0.528, 0,0.637, 0)}):Play()
-		TweenService:Create(Notification, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 280, 0, 83)}):Play()
-		TweenService:Create(Notification.Icon, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
-		TweenService:Create(Notification, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {BackgroundTransparency = 0.6}):Play()
+		task.wait(0.05)
 
-		wait(0.3)
-		TweenService:Create(Notification.Title, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.4}):Play()
-		TweenService:Create(Notification.Description, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 0.5}):Play()
-		wait(0.4)
-		TweenService:Create(Notification, TweenInfo.new(0.9, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 260, 0, 0)}):Play()
-		TweenService:Create(Notification, TweenInfo.new(0.8, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
-		TweenService:Create(Notification.Title, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
-		TweenService:Create(Notification.Description, TweenInfo.new(0.6, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
-		wait(0.2)
-		if not false then
-			neon:UnbindFrame(Notification.BlurModule)
-			blurlight:Destroy()
-		end
-		wait(0.9)
-		Notification:Destroy()
+		TweenService:Create(newNotification.Icon, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
+
+		task.wait(0.05)
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 0.35}):Play()
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 0.95}):Play()
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 0.82}):Play()
+
+		local waitDuration = math.min(math.max((#newNotification.Description.Text * 0.1) + 2.5, 3), 10)
+		task.wait(data.Duration or waitDuration)
+
+		newNotification.Icon.Visible = false
+		TweenService:Create(newNotification, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {BackgroundTransparency = 1}):Play()
+		TweenService:Create(newNotification.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Exponential), {Transparency = 1}):Play()
+		TweenService:Create(newNotification.Shadow, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {ImageTransparency = 1}):Play()
+		TweenService:Create(newNotification.Title, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+		TweenService:Create(newNotification.Description, TweenInfo.new(0.3, Enum.EasingStyle.Exponential), {TextTransparency = 1}):Play()
+
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, 0)}):Play()
+
+		task.wait(1)
+
+		TweenService:Create(newNotification, TweenInfo.new(1, Enum.EasingStyle.Exponential), {Size = UDim2.new(1, -90, 0, -Notifications:FindFirstChild("UIListLayout").Padding.Offset)}):Play()
+
+		newNotification.Visible = false
+		newNotification:Destroy()
 	end)
 end
 
@@ -792,9 +751,15 @@ function Hide()
 	TweenService:Create(Topbar.UIStroke, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
 	for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 		if TopbarButton.ClassName == "ImageButton" then
-			TweenService:Create(TopbarButton, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
+			if TopbarButton.Name == 'Icon' then
+				TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0}):Play()
+			else
+				TweenService:Create(TopbarButton, TweenInfo.new(0.7, Enum.EasingStyle.Exponential), {ImageTransparency = 0.8}):Play()
+			end
+
 		end
 	end
+
 	for _, tabbtn in ipairs(TabsList:GetChildren()) do
 		if tabbtn.ClassName == "Frame" and tabbtn.Name ~= "Placeholder" then
 			TweenService:Create(tabbtn, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
@@ -1200,6 +1165,25 @@ function RayfieldLibrary:CreateWindow(Settings)
 		end
 	end
 
+	if Settings.Icon and Settings.Icon ~= 0 and Topbar:FindFirstChild('Icon') then
+		Topbar.Icon.Visible = true
+		Topbar.Title.Position = UDim2.new(0, 47, 0.5, 0)
+
+		if Settings.Icon then
+			if typeof(Settings.Icon) == 'string' then
+				local asset = getIcon(Settings.Icon)
+
+				Topbar.Icon.Image = 'rbxassetid://'..asset.id
+				Topbar.Icon.ImageRectOffset = asset.imageRectOffset
+				Topbar.Icon.ImageRectSize = asset.imageRectSize
+			else
+				Topbar.Icon.Image = "rbxassetid://" .. (Settings.Icon or 0)
+			end
+		else
+			Topbar.Icon.Image = "rbxassetid://" .. 0
+		end
+	end
+
 	if Settings.KeySystem then
 		if not Settings.KeySettings then
 			Passthrough = true
@@ -1436,16 +1420,22 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 		TopTabButton.Size = UDim2.new(0, TopTabButton.Title.TextBounds.X + 30, 0, 30)
 
-		if Image then
-			TopTabButton.Image.Image = "rbxassetid://"..Image
-			SideTabButton.Image.Image = "rbxassetid://"..Image
+if Image then
+    if typeof(Image) == 'string' then
+        local asset = getIcon(Image)
 
-			TopTabButton.Title.AnchorPoint = Vector2.new(0, 0.5)
-			TopTabButton.Title.Position = UDim2.new(0, 37, 0.5, 0)
-			TopTabButton.Image.Visible = true
-			TopTabButton.Title.TextXAlignment = Enum.TextXAlignment.Left
-			TopTabButton.Size = UDim2.new(0, TopTabButton.Title.TextBounds.X + 46, 0, 30)
-		end
+        TabButton.Image.Image = 'rbxassetid://'..asset.id
+        TabButton.Image.ImageRectOffset = asset.imageRectOffset
+        TabButton.Image.ImageRectSize = asset.imageRectSize
+
+        SideBarButton.Image.Image = 'rbxassetid://'..asset.id
+        SideBarButton.Image.ImageRectOffset = asset.imageRectOffset
+        SideBarButton.Image.ImageRectSize = asset.imageRectSize
+    else
+        TabButton.Image.Image = "rbxassetid://"..Image
+        SideBarButton.Image.Image = "rbxassetid://"..Image
+    end
+end
 
 		TopTabButton.BackgroundTransparency = 1
 		TopTabButton.Title.TextTransparency = 1
