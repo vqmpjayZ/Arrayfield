@@ -1,7 +1,6 @@
 --[[
 
-h
-
+debug test
 ]]
 
 local Release = "Re-Build 1.2"
@@ -1420,21 +1419,25 @@ function RayfieldLibrary:CreateWindow(Settings)
 
 		TopTabButton.Size = UDim2.new(0, TopTabButton.Title.TextBounds.X + 30, 0, 30)
 
-if Image then
-    if typeof(Image) == 'string' then
-        local asset = getIcon(Image)
+if TopTabButton:FindFirstChild("Image") and SideTabButton:FindFirstChild("Image") then
+    if Image then
+        if typeof(Image) == 'string' then
+            local asset = getIcon(Image)
 
-        TabButton.Image.Image = 'rbxassetid://'..asset.id
-        TabButton.Image.ImageRectOffset = asset.imageRectOffset
-        TabButton.Image.ImageRectSize = asset.imageRectSize
+            TopTabButton.Image.Image = 'rbxassetid://'..asset.id
+            TopTabButton.Image.ImageRectOffset = asset.imageRectOffset
+            TopTabButton.Image.ImageRectSize = asset.imageRectSize
 
-        SideTabButton.Image.Image = 'rbxassetid://'..asset.id
-        SideTabButton.Image.ImageRectOffset = asset.imageRectOffset
-        SideTabButton.Image.ImageRectSize = asset.imageRectSize
-    else
-        TabButton.Image.Image = "rbxassetid://"..Image
-        SideTabButton.Image.Image = "rbxassetid://"..Image
+            SideTabButton.Image.Image = 'rbxassetid://'..asset.id
+            SideTabButton.Image.ImageRectOffset = asset.imageRectOffset
+            SideTabButton.Image.ImageRectSize = asset.imageRectSize
+        else
+            TopTabButton.Image.Image = "rbxassetid://"..Image
+            SideTabButton.Image.Image = "rbxassetid://"..Image
+        end
     end
+else
+    warn("Image property not found on TopTabButton or SideTabButton")
 end
 
 		TopTabButton.BackgroundTransparency = 1
