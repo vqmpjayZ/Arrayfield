@@ -1,6 +1,6 @@
 --[[
 
-Luice implant test
+h
 
 ]]
 
@@ -1428,12 +1428,12 @@ if Image then
         TabButton.Image.ImageRectOffset = asset.imageRectOffset
         TabButton.Image.ImageRectSize = asset.imageRectSize
 
-        SideBarButton.Image.Image = 'rbxassetid://'..asset.id
-        SideBarButton.Image.ImageRectOffset = asset.imageRectOffset
-        SideBarButton.Image.ImageRectSize = asset.imageRectSize
+        SideTabButton.Image.Image = 'rbxassetid://'..asset.id
+        SideTabButton.Image.ImageRectOffset = asset.imageRectOffset
+        SideTabButton.Image.ImageRectSize = asset.imageRectSize
     else
         TabButton.Image.Image = "rbxassetid://"..Image
-        SideBarButton.Image.Image = "rbxassetid://"..Image
+        SideTabButton.Image.Image = "rbxassetid://"..Image
     end
 end
 
