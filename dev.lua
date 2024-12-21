@@ -1,10 +1,7 @@
 --[[
 
 Rayfield Interface Suite
-by Sirius
 
-shlex | Designing + Programming
-iRay  | Programming
 vxmpjay | Programming
 
 ]]
@@ -170,6 +167,10 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
     local Elements = Main.Elements
     local LoadingFrame = Main.LoadingFrame
     local TabList = Main.TabList
+	--local SearchBar = Main.Searchbar
+	--local Filler = SearchBar.CanvasGroup.Filler
+	local Prompt = Main.Prompt
+	local NotePrompt = Main.NotePrompt
     
     Rayfield.DisplayOrder = 100
     LoadingFrame.Version.Text = Release
@@ -3644,6 +3645,9 @@ function Maximise()
 	Topbar.Theme.ImageTransparency = 1
 	Topbar.ChangeSize.ImageTransparency = 1
 	Topbar.Hide.ImageTransparency = 1
+
+	local Main = Rayfield.Main
+	local Prompt = Main.Prompt
 
 	wait(0.8)
 	Topbar.Visible = true
