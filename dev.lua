@@ -1,6 +1,6 @@
 --[[
 
-end my suffering
+FUCK YOU UCFUCK YU
 
 ]]
 
@@ -168,7 +168,7 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
 	--local SearchBar = Main.Searchbar
 	--local Filler = SearchBar.CanvasGroup.Filler
 --	local Prompt = Main.Prompt
-	local NotePrompt = Main.NotePrompt
+--	local NotePrompt = Main.NotePrompt
     
     Rayfield.DisplayOrder = 100
     LoadingFrame.Version.Text = Release
