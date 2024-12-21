@@ -170,8 +170,8 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
     local Elements = Main.Elements
     local LoadingFrame = Main.LoadingFrame
     local TabList = Main.TabList
-	local SearchBar = Main.Searchbar
-	local Filler = SearchBar.CanvasGroup.Filler
+	--local SearchBar = Main.Searchbar
+	--local Filler = SearchBar.CanvasGroup.Filler
 	local Prompt = Main.Prompt
 	local NotePrompt = Main.NotePrompt
     
@@ -3725,7 +3725,7 @@ function Maximise()
 					end)
 				end
 			end
-			
+
 		TweenService:Create(Prompt, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = .5}):Play()
 		wait(.2)
 		TweenService:Create(PromptUI, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {BackgroundTransparency = 0,Size = UDim2.new(0,350,0,150)}):Play()
