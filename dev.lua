@@ -1,11 +1,6 @@
 --[[
 
-Rayfield Interface Suite
-by Sirius
-
-shlex | Designing + Programming
-iRay  | Programming
-vxmpjay | Programming
+im going insane doing this im not even lying
 
 ]]
 
@@ -173,7 +168,7 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
 	--local SearchBar = Main.Searchbar
 	--local Filler = SearchBar.CanvasGroup.Filler
 --	local Prompt = Main.Prompt
-	local NotePrompt = Main.NotePrompt
+--	local NotePrompt = Main.NotePrompt
     
     Rayfield.DisplayOrder = 100
     LoadingFrame.Version.Text = Release
