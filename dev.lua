@@ -1,11 +1,6 @@
 --[[
 
-Rayfield Interface Suite
-by Sirius
-
-shlex | Designing + Programming
-iRay  | Programming
-vxmpjay | Programming
+end my suffering
 
 ]]
 
@@ -6556,4 +6551,4 @@ for _, section in pairs(Sections) do
 end
 
 return RayfieldLibrary
-end
+--end
