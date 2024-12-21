@@ -1,9 +1,10 @@
 --[[
 
-notification error testing
+i fcked up the code last time
+
 ]]
 
-local Release = "Re-Build 1.21"
+local Release = "Re-Build 1.22"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
@@ -633,22 +634,26 @@ function RayfieldLibrary:Notify(data) -- action e.g open messages
 		newNotification.Title.Text = data.Title or "Unknown Title"
 		newNotification.Description.Text = data.Content or "Unknown Content"
 
-if newNotification:FindFirstChild("Icon") then
-    if data.Image then
-        if typeof(data.Image) == 'string' then
-            local asset = getIcon(data.Image)
-            newNotification.Icon.Image = 'rbxassetid://'..asset.id
-            newNotification.Icon.ImageRectOffset = asset.imageRectOffset
-            newNotification.Icon.ImageRectSize = asset.imageRectSize
+        if newNotification:FindFirstChild("Icon") then
+            if data.Image then
+                if typeof(data.Image) == 'string' then
+                    local asset = pcall(getIcon, data.Image)
+                    if asset then
+                        newNotification.Icon.Image = 'rbxassetid://'..asset.id
+                        newNotification.Icon.ImageRectOffset = asset.imageRectOffset
+                        newNotification.Icon.ImageRectSize = asset.imageRectSize
+                    else
+                        warn("Failed to retrieve icon: "..tostring(data.Image))
+                    end
+                else
+                    newNotification.Icon.Image = "rbxassetid://" .. (data.Image or 0)
+                end
+            else
+                newNotification.Icon.Image = "rbxassetid://" .. 0
+            end
         else
-            newNotification.Icon.Image = "rbxassetid://" .. (data.Image or 0)
+            warn("Notification template is missing an Icon object!")
         end
-    else
-        newNotification.Icon.Image = "rbxassetid://" .. 0
-    end
-else
-    warn("Notification Icon is missing. Skipping icon setup.")
-end
 
 		-- Set initial transparency values
 
