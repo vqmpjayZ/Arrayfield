@@ -1,9 +1,9 @@
 --[[
 
-debug test
+notification error testing
 ]]
 
-local Release = "Re-Build 1.2"
+local Release = "Re-Build 1.21"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
@@ -633,19 +633,22 @@ function RayfieldLibrary:Notify(data) -- action e.g open messages
 		newNotification.Title.Text = data.Title or "Unknown Title"
 		newNotification.Description.Text = data.Content or "Unknown Content"
 
-		if data.Image then
-			if typeof(data.Image) == 'string' then
-				local asset = getIcon(data.Image)
-
-				newNotification.Icon.Image = 'rbxassetid://'..asset.id
-				newNotification.Icon.ImageRectOffset = asset.imageRectOffset
-				newNotification.Icon.ImageRectSize = asset.imageRectSize
-			else
-				newNotification.Icon.Image = "rbxassetid://" .. (data.Image or 0)
-			end
-		else
-			newNotification.Icon.Image = "rbxassetid://" .. 0
-		end
+if newNotification:FindFirstChild("Icon") then
+    if data.Image then
+        if typeof(data.Image) == 'string' then
+            local asset = getIcon(data.Image)
+            newNotification.Icon.Image = 'rbxassetid://'..asset.id
+            newNotification.Icon.ImageRectOffset = asset.imageRectOffset
+            newNotification.Icon.ImageRectSize = asset.imageRectSize
+        else
+            newNotification.Icon.Image = "rbxassetid://" .. (data.Image or 0)
+        end
+    else
+        newNotification.Icon.Image = "rbxassetid://" .. 0
+    end
+else
+    warn("Notification Icon is missing. Skipping icon setup.")
+end
 
 		-- Set initial transparency values
 
