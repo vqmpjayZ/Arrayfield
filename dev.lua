@@ -1,6 +1,11 @@
 --[[
 
-im going insane doing this im not even lying
+Rayfield Interface Suite
+by Sirius
+
+shlex | Designing + Programming
+iRay  | Programming
+vxmpjay | Programming
 
 ]]
 
@@ -168,7 +173,7 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
 	--local SearchBar = Main.Searchbar
 	--local Filler = SearchBar.CanvasGroup.Filler
 --	local Prompt = Main.Prompt
---	local NotePrompt = Main.NotePrompt
+	local NotePrompt = Main.NotePrompt
     
     Rayfield.DisplayOrder = 100
     LoadingFrame.Version.Text = Release
@@ -218,33 +223,34 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
     
     end
     
-	local function getIcon(name : string)
-		name = string.match(string.lower(name), "^%s*(.*)%s*$") :: string
-		local sizedicons = Icons['48px']
-	
-		local r = sizedicons[name]
-		if not r then
-			error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
-		end
-	
-		local rirs = r[2]
-		local riro = r[3]
-	
-		if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
-			error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
-		end
-	
-		local irs = Vector2.new(rirs[1], rirs[2])
-		local iro = Vector2.new(riro[1], riro[2])
-	
-		local asset = {
-			id = r[1],
-			imageRectSize = irs,
-			imageRectOffset = iro,
-		}
-	
-		return asset
-	end
+local function getIcon(name)
+    name = string.match(string.lower(name), "^%s*(.*)%s*$")
+    local sizedicons = Icons['48px']
+
+    local r = sizedicons[name]
+    if not r then
+        error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
+    end
+
+    local rirs = r[2]
+    local riro = r[3]
+
+    if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
+        error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+    end
+
+    local irs = Vector2.new(rirs[1], rirs[2])
+    local iro = Vector2.new(riro[1], riro[2])
+
+    local asset = {
+        id = r[1],
+        imageRectSize = irs,
+        imageRectOffset = iro,
+    }
+
+    return asset
+end
+
 
     local function AddDraggingFunctionality(DragPoint, Main)
         pcall(function()		
@@ -2503,89 +2509,34 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
         Topbar.ChangeSize.ImageTransparency = 1
         Topbar.Hide.ImageTransparency = 1
     
-	wait(0.8)
-	Topbar.Visible = true
-	TweenService:Create(Topbar, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-	TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-	wait(0.1)
-	TweenService:Create(Topbar.Divider, TweenInfo.new(1, Enum.EasingStyle.Quint), {Size = UDim2.new(1, 0, 0, 1)}):Play()
-	wait(0.1)
-	TweenService:Create(Topbar.Title, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-	wait(0.1)
-	TweenService:Create(Topbar.Theme, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {ImageTransparency = 0.8}):Play()
-	wait(0.1)
-	TweenService:Create(Topbar.ChangeSize, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {ImageTransparency = 0.8}):Play()
-	wait(0.1)
-	TweenService:Create(Topbar.Hide, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {ImageTransparency = 0.8}):Play()
-	wait(0.3)
-	function Window:Prompt(PromptSettings)
-		local PromptUI = Prompt.Prompt
-		Prompt.Visible = true
-		Prompt.BackgroundTransparency = 1
-		PromptUI.BackgroundTransparency = 1
-		PromptUI.UIStroke.Transparency = 1
-		PromptUI.Content.TextTransparency = 1
-		PromptUI.Title.TextTransparency = 1
-		PromptUI.Sub.TextTransparency = 1
-		PromptUI.Size = UDim2.new(0,340,0,140)
-		PromptUI.Buttons.Template.Visible = false
-		PromptUI.Buttons.Template.TextLabel.TextTransparency = 1
-		PromptUI.Buttons.Template.UIStroke.Transparency = 1
-		--PromptUI.Buttons.Middle.Visible = false
-		--PromptUI.Buttons.Middle.TextLabel.TextTransparency = 1
-		--PromptUI.Buttons.Middle.UIStroke.Transparency = 1
-
-		PromptUI.Content.Text = PromptSettings.Content
-		PromptUI.Sub.Text = PromptSettings.SubTitle or ''
-		PromptUI.Title.Text = PromptSettings.Title or ''
-
-		if PromptSettings.Actions then
-			for name,info in pairs(PromptSettings.Actions) do
-				local Button = PromptUI.Buttons.Template:Clone()
-				Button.TextLabel.Text = info.Name
-				Button.Interact.MouseButton1Up:Connect(function()
-					if not clicked then
-						local Success, Response = pcall(info.Callback)
-						clicked = true
-						if not Success then
-							ClosePrompt()
-							print("Rayfield | "..info.Name.." Callback Error " ..tostring(Response))
-						else
-							ClosePrompt()
-						end
-					end
-				end)
-				Button.Name = name
-				Button.Parent = PromptUI.Buttons -- saving memory
-				Button.Size = UDim2.fromOffset(Button.TextLabel.TextBounds.X + 24, 30)
-			end
-		end
-
-		TweenService:Create(Prompt, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = .5}):Play()
-		wait(.2)
-		TweenService:Create(PromptUI, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {BackgroundTransparency = 0,Size = UDim2.new(0,350,0,150)}):Play()
-		wait(0.2)
-		TweenService:Create(PromptUI.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-		TweenService:Create(PromptUI.Title, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-		TweenService:Create(PromptUI.Content, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-		TweenService:Create(PromptUI.Sub, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-		wait(1)
-		if PromptSettings.Actions then
-			for _,button in pairs(PromptUI.Buttons:GetChildren()) do
-				if button.Name ~= 'Template' and button.Name ~= 'Middle' and button:IsA('Frame') then
-					button.Visible = true
-					TweenService:Create(button.UIStroke,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-					TweenService:Create(button.TextLabel,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-					wait(.8)
-				end
-			end
-		else
-			--TweenService:Create(PromptUI.Buttons.Middle.UIStroke,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-			--TweenService:Create(PromptUI.Buttons.Middle.TextLabel,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-		end
-	end
-	return Window
-end    
+        wait(0.5)
+        
+        Topbar.Visible = true
+        TweenService:Create(Topbar, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
+        TweenService:Create(Topbar.CornerRepair, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
+        wait(0.1)
+        TweenService:Create(Topbar.Divider, TweenInfo.new(1, Enum.EasingStyle.Quint), {Size = UDim2.new(1, 0, 0, 1)}):Play()
+        wait(0.1)
+        TweenService:Create(Topbar.Title, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+        wait(0.1)
+        TweenService:Create(Topbar.Theme, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {ImageTransparency = 0.8}):Play()
+        wait(0.1)
+        TweenService:Create(Topbar.ChangeSize, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {ImageTransparency = 0.8}):Play()
+        wait(0.1)
+        TweenService:Create(Topbar.Hide, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {ImageTransparency = 0.8}):Play()
+        wait(0.3)
+        
+        if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled or MobileEnabled == true then
+            Main.BottomBar.Visible = true
+        else
+            Main.BottomBar.Visible = false
+        end
+        
+        TweenService:Create(Main.BottomBar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), { Size = UDim2.new(0, 500, 0, 50), BackgroundTransparency = 0 }):Play()
+    
+        return Window
+    end
+    
     
     function RayfieldLibrary:Destroy()
         Rayfield:Destroy()
@@ -2932,33 +2883,34 @@ local function AddDraggingFunctionality(DragPoint, Main)
 	end)
 end   
 
-local function getIcon(name : string)
-	name = string.match(string.lower(name), "^%s*(.*)%s*$") :: string
-	local sizedicons = Icons['48px']
+local function getIcon(name)
+    name = string.match(string.lower(name), "^%s*(.*)%s*$")
+    local sizedicons = Icons['48px']
 
-	local r = sizedicons[name]
-	if not r then
-		error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
-	end
+    local r = sizedicons[name]
+    if not r then
+        error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
+    end
 
-	local rirs = r[2]
-	local riro = r[3]
+    local rirs = r[2]
+    local riro = r[3]
 
-	if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
-		error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
-	end
+    if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
+        error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+    end
 
-	local irs = Vector2.new(rirs[1], rirs[2])
-	local iro = Vector2.new(riro[1], riro[2])
+    local irs = Vector2.new(rirs[1], rirs[2])
+    local iro = Vector2.new(riro[1], riro[2])
 
-	local asset = {
-		id = r[1],
-		imageRectSize = irs,
-		imageRectOffset = iro,
-	}
+    local asset = {
+        id = r[1],
+        imageRectSize = irs,
+        imageRectOffset = iro,
+    }
 
-	return asset
+    return asset
 end
+
 
 local function FadeDescription(Infos)
 
@@ -3698,6 +3650,120 @@ function Maximise()
 	Topbar.Theme.ImageTransparency = 1
 	Topbar.ChangeSize.ImageTransparency = 1
 	Topbar.Hide.ImageTransparency = 1
+	
+	function Window:Prompt(PromptSettings)
+		local PromptUI = Prompt.Prompt
+		Prompt.Visible = true
+		Prompt.BackgroundTransparency = 1
+		PromptUI.BackgroundTransparency = 1
+		PromptUI.UIStroke.Transparency = 1
+		PromptUI.Content.TextTransparency = 1
+		PromptUI.Title.TextTransparency = 1
+		PromptUI.Sub.TextTransparency = 1
+		PromptUI.Size = UDim2.new(0,340,0,140)
+		PromptUI.Buttons.Template.Visible = false
+		PromptUI.Buttons.Template.TextLabel.TextTransparency = 1
+		PromptUI.Buttons.Template.UIStroke.Transparency = 1
+		--PromptUI.Buttons.Middle.Visible = false
+		--PromptUI.Buttons.Middle.TextLabel.TextTransparency = 1
+		--PromptUI.Buttons.Middle.UIStroke.Transparency = 1
+
+		PromptUI.Content.Text = PromptSettings.Content
+		PromptUI.Sub.Text = PromptSettings.SubTitle or ''
+		PromptUI.Title.Text = PromptSettings.Title or ''
+
+		if PromptSettings.Actions then
+			for name,info in pairs(PromptSettings.Actions) do
+				local Button = PromptUI.Buttons.Template:Clone()
+				Button.TextLabel.Text = info.Name
+				Button.Interact.MouseButton1Up:Connect(function()
+					if not clicked then
+						local Success, Response = pcall(info.Callback)
+						clicked = true
+						if not Success then
+							ClosePrompt()
+							print("Rayfield | "..info.Name.." Callback Error " ..tostring(Response))
+						else
+							ClosePrompt()
+						end
+					end
+				end)
+				Button.Name = name
+				Button.Parent = PromptUI.Buttons -- saving memory
+				Button.Size = UDim2.fromOffset(Button.TextLabel.TextBounds.X + 24, 30)
+			end
+		end
+
+		TweenService:Create(Prompt, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = .5}):Play()
+		wait(.2)
+		TweenService:Create(PromptUI, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {BackgroundTransparency = 0,Size = UDim2.new(0,350,0,150)}):Play()
+		wait(0.2)
+		TweenService:Create(PromptUI.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+		TweenService:Create(PromptUI.Title, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		TweenService:Create(PromptUI.Content, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		TweenService:Create(PromptUI.Sub, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		wait(1)
+		if PromptSettings.Actions then
+			for _,button in pairs(PromptUI.Buttons:GetChildren()) do
+				if button.Name ~= 'Template' and button.Name ~= 'Middle' and button:IsA('Frame') then
+					button.Visible = true
+					TweenService:Create(button.UIStroke,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+					TweenService:Create(button.TextLabel,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+					wait(.8)
+				end
+			end
+		else
+			--TweenService:Create(PromptUI.Buttons.Middle.UIStroke,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+			--TweenService:Create(PromptUI.Buttons.Middle.TextLabel,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		end
+	end
+	return Window
+end
+
+		function ClosePrompt()
+			local PromptUI = Prompt.Prompt
+			clicked = false
+			TweenService:Create(Prompt, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
+			TweenService:Create(PromptUI, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {BackgroundTransparency = 1,Size = UDim2.new(0,340,0,140)}):Play()
+			TweenService:Create(PromptUI.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+			TweenService:Create(PromptUI.Title, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
+			TweenService:Create(PromptUI.Content, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
+			TweenService:Create(PromptUI.Sub, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
+			for _,button in pairs(PromptUI.Buttons:GetChildren()) do
+				if button.Name ~= 'Template' and button:IsA("Frame") then
+					TweenService:Create(button.UIStroke,TweenInfo.new(0.2, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+					TweenService:Create(button.TextLabel,TweenInfo.new(0.2, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
+					delay(.2,function()
+						button:Destroy()
+					end)
+				end
+			end
+
+		TweenService:Create(Prompt, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = .5}):Play()
+		wait(.2)
+		TweenService:Create(PromptUI, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {BackgroundTransparency = 0,Size = UDim2.new(0,350,0,150)}):Play()
+		wait(0.2)
+		TweenService:Create(PromptUI.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+		TweenService:Create(PromptUI.Title, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		TweenService:Create(PromptUI.Content, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		TweenService:Create(PromptUI.Sub, TweenInfo.new(0.45, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		wait(1)
+		if PromptSettings.Actions then
+			for _,button in pairs(PromptUI.Buttons:GetChildren()) do
+				if button.Name ~= 'Template' and button.Name ~= 'Middle' and button:IsA('Frame') then
+					button.Visible = true
+					TweenService:Create(button.UIStroke,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+					TweenService:Create(button.TextLabel,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+					wait(.8)
+				end
+			end
+		else
+			--TweenService:Create(PromptUI.Buttons.Middle.UIStroke,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+			--TweenService:Create(PromptUI.Buttons.Middle.TextLabel,TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+		end
+	end
+	return Window
+end
 
 	for _, tab in ipairs(Elements:GetChildren()) do
 		if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
@@ -3764,7 +3830,7 @@ function Maximise()
 
 	wait(0.5)
 	Debounce = false
-end
+--end
 
 function OpenSideBar()
 	Debounce = true
