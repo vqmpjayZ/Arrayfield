@@ -950,7 +950,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 	if Settings.LoadingTitle ~= "Rayfield Interface Suite" then
 		LoadingFrame.Version.Text = "Rayfield Mobile"
 	end
-end
+	
 	Topbar.Visible = false
 	Elements.Visible = false
 	LoadingFrame.Visible = true
@@ -1205,7 +1205,7 @@ end
 	if Settings.KeySystem then
 		repeat wait() until Passthrough
 	end
-	
+end
 	Notifications.Template.Visible = false
 	Notifications.Visible = true
 	Rayfield.Enabled = true
