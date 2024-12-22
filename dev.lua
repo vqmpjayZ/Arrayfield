@@ -1,4 +1,4 @@
-local Release = "Beta 8 Mobile"
+local Release = "Arrays Mobile 9"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
@@ -236,8 +236,8 @@ local function AddDraggingFunctionality(DragPoint, Main)
     end)
 end   
 
-local function getIcon(name)
-	name = string.match(string.lower(name), "^%s*(.*)%s*$")
+local function getIcon(name : string)
+	name = string.match(string.lower(name), "^%s*(.*)%s*$") :: string
 	local sizedicons = Icons['48px']
 
 	local r = sizedicons[name]
