@@ -1,6 +1,6 @@
 --[[
 
-FUCK YOU UCFUCK YU
+attempt 30000
 
 ]]
 
@@ -3647,6 +3647,7 @@ function Maximise()
 	Topbar.Hide.ImageTransparency = 1
 	
 	function Window:Prompt(PromptSettings)
+		local Prompt = Main.Prompt
 		local PromptUI = Prompt.Prompt
 		Prompt.Visible = true
 		Prompt.BackgroundTransparency = 1
