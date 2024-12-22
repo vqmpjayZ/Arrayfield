@@ -1,4 +1,4 @@
-local Release = "Arrays Mobile 9"
+local Release = "Arrays Mobile 19"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
@@ -568,20 +568,20 @@ function RayfieldLibrary:Notify(NotificationSettings)
         Notification.Description.TextTransparency = 1
         Notification.Description.TextColor3 = SelectedTheme.TextColor
         Notification.Icon.ImageColor3 = SelectedTheme.TextColor
-		if NotificationSettings.Image then
-			pcall(function()
-				if type(NotificationSettings.Image) == "string" then
-					local asset = getIcon(NotificationSettings.Image)
-					Notification.Icon.Image = "rbxassetid://" .. asset.id
-					Notification.Icon.ImageRectOffset = asset.imageRectOffset
-					Notification.Icon.ImageRectSize = asset.imageRectSize
-				else
-					Notification.Icon.Image = "rbxassetid://" .. tostring(NotificationSettings.Image)
-				end
-			end)
-		else
-			Notification.Icon.Image = "rbxassetid://3944680095" -- Default icon
-		end	
+        if NotificationSettings.Image then
+            pcall(function()
+                if type(NotificationSettings.Image) == "string" then
+                    local asset = getIcon(NotificationSettings.Image)
+                    Notification.Icon.Image = "rbxassetid://" .. asset.id
+                    Notification.Icon.ImageRectOffset = asset.imageRectOffset
+                    Notification.Icon.ImageRectSize = asset.imageRectSize
+                else
+                    Notification.Icon.Image = "rbxassetid://" .. tostring(NotificationSettings.Image)
+                end
+            end)
+        else
+            Notification.Icon.Image = "rbxassetid://3944680095" -- Default icon
+        end        
 
         Notification.Icon.ImageTransparency = 1
 
@@ -1232,16 +1232,17 @@ function RayfieldLibrary:CreateWindow(Settings)
         TabButton.Title.TextWrapped = false
         TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 30, 0, 30)
 
-		if Image then
-			if typeof(Image) == 'string' then
-				local asset = getIcon(Image)
-
-				TabButton.Image.Image = 'rbxassetid://'..asset.id
-				TabButton.Image.ImageRectOffset = asset.imageRectOffset
-				TabButton.Image.ImageRectSize = asset.imageRectSize
-			else
-				TabButton.Image.Image = "rbxassetid://"..Image
-			end
+        if Image then
+            if typeof(Image) == 'string' then
+                local asset = getIcon(Image)
+        
+                TabButton.Image.Image = 'rbxassetid://'..asset.id
+                TabButton.Image.ImageRectOffset = asset.imageRectOffset
+                TabButton.Image.ImageRectSize = asset.imageRectSize
+            else
+                TabButton.Image.Image = "rbxassetid://"..Image
+            end
+        end        
 
         TabButton.BackgroundTransparency = 1
         TabButton.Title.TextTransparency = 1
