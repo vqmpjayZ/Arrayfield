@@ -4,7 +4,7 @@ Save test 2.0
 
 ]]
 
-local Release = "Mobile 9"
+local Release = "Beta 8 Mobile"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
@@ -1205,7 +1205,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 	if Settings.KeySystem then
 		repeat wait() until Passthrough
 	end
-end
+	
 	Notifications.Template.Visible = false
 	Notifications.Visible = true
 	Rayfield.Enabled = true
@@ -1239,17 +1239,22 @@ end
 		TabButton.Title.TextWrapped = false
 		TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 30, 0, 30)
 
-		if Image then
-			if typeof(Image) == 'string' then
-				local asset = getIcon(Image)
-
-				TabButton.Image.Image = 'rbxassetid://'..asset.id
-				TabButton.Image.ImageRectOffset = asset.imageRectOffset
-				TabButton.Image.ImageRectSize = asset.imageRectSize
-			else
-				TabButton.Image.Image = "rbxassetid://"..Image
+		if TopTabButton:FindFirstChild("Image") then
+			if Image then
+				if typeof(Image) == 'string' then
+					local asset = getIcon(Image)
+		
+					TopTabButton.Image.Image = 'rbxassetid://' .. asset.id
+					TopTabButton.Image.ImageRectOffset = asset.imageRectOffset
+					TopTabButton.Image.ImageRectSize = asset.imageRectSize
+				else
+					TopTabButton.Image.Image = "rbxassetid://" .. Image
+				end
 			end
-		end
+		else
+			warn("Image property not found on TopTabButton")
+		end		
+
 		TabButton.BackgroundTransparency = 1
 		TabButton.Title.TextTransparency = 1
 		TabButton.Shadow.ImageTransparency = 1
@@ -1972,6 +1977,7 @@ end
 					Debounce = false	
 					SaveConfiguration()
 				end)
+			end
 
 			for _, droption in ipairs(Dropdown.List:GetChildren()) do
 				if droption.ClassName == "Frame" and droption.Name ~= "Placeholder" then
@@ -2513,6 +2519,7 @@ end
 
 	return Window
 end
+
 
 function RayfieldLibrary:Destroy()
 	Rayfield:Destroy()
