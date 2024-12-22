@@ -1,6 +1,6 @@
 --[[
 
-attempt 30000
+FUCK YOU UCFUCK YU
 
 ]]
 
@@ -107,12 +107,14 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
     
     -- Services
     
-    local UserInputService = game:GetService("UserInputService")
-    local TweenService = game:GetService("TweenService")
-    local HttpService = game:GetService("HttpService")
-    local RunService = game:GetService("RunService")
-    local Players = game:GetService("Players")
-    local CoreGui = game:GetService("CoreGui")
+	local UserInputService = game:GetService("UserInputService")
+	local TweenService = game:GetService("TweenService")
+	local HttpService = game:GetService("HttpService")
+	local RunService = game:GetService("RunService")
+	local Players = game:GetService("Players")
+	local CoreGui = game:GetService("CoreGui")
+	local LocalPlayer = game:GetService('Players').LocalPlayer
+	local TextService = game:GetService("TextService") 
     
     -- Interface Management
     local Rayfield = RunService:IsStudio() and script.Parent or game:GetObjects("rbxassetid://14446298082")[1]
@@ -167,7 +169,7 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
     local TabList = Main.TabList
 	--local SearchBar = Main.Searchbar
 	--local Filler = SearchBar.CanvasGroup.Filler
---	local Prompt = Main.Prompt
+local Prompt = Main.Prompt
 --	local NotePrompt = Main.NotePrompt
     
     Rayfield.DisplayOrder = 100
