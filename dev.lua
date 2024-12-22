@@ -1239,7 +1239,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 		TabButton.Title.TextWrapped = false
 		TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 30, 0, 30)
 
-		if TopTabButton:FindFirstChild("Image") then
+		if TopTabButton and TopTabButton:FindFirstChild("Image") then
 			if Image then
 				if typeof(Image) == 'string' then
 					local asset = getIcon(Image)
@@ -1250,9 +1250,11 @@ function RayfieldLibrary:CreateWindow(Settings)
 				else
 					TopTabButton.Image.Image = "rbxassetid://" .. Image
 				end
+			else
+				warn("No image provided for TopTabButton")
 			end
 		else
-			warn("Image property not found on TopTabButton")
+			warn("TopTabButton is nil or does not have an 'Image' child")
 		end		
 
 		TabButton.BackgroundTransparency = 1
