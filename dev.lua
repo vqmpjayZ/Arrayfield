@@ -1,4 +1,4 @@
-local Release = "Arrays Mobile 19"
+local Release = "Arrays Mobile 9"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
@@ -1242,7 +1242,7 @@ function RayfieldLibrary:CreateWindow(Settings)
             else
                 TabButton.Image.Image = "rbxassetid://"..Image
             end
-        end        
+        end
 
         TabButton.BackgroundTransparency = 1
         TabButton.Title.TextTransparency = 1
@@ -2438,7 +2438,6 @@ function RayfieldLibrary:CreateWindow(Settings)
 
         return Tab
     end
-end
 
     Elements.Visible = true
     
