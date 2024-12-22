@@ -15,11 +15,19 @@ local UserInputService = game:GetService("UserInputService")
 local player = Players.LocalPlayer
 
 if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
+--[[
+Issues with Mobile:
+- No Window:Prompt
+- No search
+- Cant lock sections
+--]]
+
     local Release = "Beta 9 Mobile"
     local NotificationDuration = 6.5
     local RayfieldFolder = "Rayfield"
     local ConfigurationFolder = RayfieldFolder.."/Configurations"
     local ConfigurationExtension = ".rfld"
+--Added lucide icon support
     
     local MobileEnabled = false
     
@@ -170,11 +178,16 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
     local Elements = Main.Elements
     local LoadingFrame = Main.LoadingFrame
     local TabList = Main.TabList
+	--local SearchBar = Main.Searchbar
+	--local Filler = SearchBar.CanvasGroup.Filler
+--	local Prompt = Main.Prompt
+--	local NotePrompt = Main.NotePrompt
     
     Rayfield.DisplayOrder = 100
     LoadingFrame.Version.Text = Release
     
-    
+    local Icons = useStudio and require(script.Parent.icons) or loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/icons.lua'))()
+
     -- Variables
     
     local request = (syn and syn.request) or (http and http.request) or http_request
@@ -218,6 +231,34 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
     
     end
     
+	local function getIcon(name : string)
+		name = string.match(string.lower(name), "^%s*(.*)%s*$") :: string
+		local sizedicons = Icons['48px']
+	
+		local r = sizedicons[name]
+		if not r then
+			error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
+		end
+	
+		local rirs = r[2]
+		local riro = r[3]
+	
+		if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
+			error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+		end
+	
+		local irs = Vector2.new(rirs[1], rirs[2])
+		local iro = Vector2.new(riro[1], riro[2])
+	
+		local asset = {
+			id = r[1],
+			imageRectSize = irs,
+			imageRectOffset = iro,
+		}
+	
+		return asset
+	end
+
     local function AddDraggingFunctionality(DragPoint, Main)
         pcall(function()		
             local Dragging, DragInput, MousePos, FramePos = false
@@ -556,11 +597,20 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
             Notification.Description.TextTransparency = 1
             Notification.Description.TextColor3 = SelectedTheme.TextColor
             Notification.Icon.ImageColor3 = SelectedTheme.TextColor
-            if NotificationSettings.Image then
-                Notification.Icon.Image = "rbxassetid://"..tostring(NotificationSettings.Image) 
-            else
-                Notification.Icon.Image = "rbxassetid://3944680095"
-            end
+			if NotificationSettings.Image then
+				pcall(function()
+					if type(NotificationSettings.Image) == "string" then
+						local asset = getIcon(NotificationSettings.Image)
+						Notification.Icon.Image = "rbxassetid://" .. asset.id
+						Notification.Icon.ImageRectOffset = asset.imageRectOffset
+						Notification.Icon.ImageRectSize = asset.imageRectSize
+					else
+						Notification.Icon.Image = "rbxassetid://" .. tostring(NotificationSettings.Image)
+					end
+				end)
+			else
+				Notification.Icon.Image = "rbxassetid://3944680095" -- Default icon
+			end			
     
             Notification.Icon.ImageTransparency = 1
     
@@ -1211,14 +1261,23 @@ if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled then
             TabButton.Title.TextWrapped = false
             TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 30, 0, 30)
     
-            if Image then
-                TabButton.Title.AnchorPoint = Vector2.new(0, 0.5)
-                TabButton.Title.Position = UDim2.new(0, 37, 0.5, 0)
-                TabButton.Image.Image = "rbxassetid://"..Image
-                TabButton.Image.Visible = true
-                TabButton.Title.TextXAlignment = Enum.TextXAlignment.Left
-                TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 46, 0, 30)
-            end
+		if Image then
+			if typeof(Image) == 'string' then
+				local asset = getIcon(Image)
+
+				TabButton.Image.Image = 'rbxassetid://'..asset.id
+				TabButton.Image.ImageRectOffset = asset.imageRectOffset
+				TabButton.Image.ImageRectSize = asset.imageRectSize
+			else
+				TabButton.Image.Image = "rbxassetid://"..Image
+			end
+
+			TabButton.Title.AnchorPoint = Vector2.new(0, 0.5)
+			TabButton.Title.Position = UDim2.new(0, 37, 0.5, 0)
+			TabButton.Image.Visible = true
+			TabButton.Title.TextXAlignment = Enum.TextXAlignment.Left
+			TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 52, 0, 30)
+		end
     
             TabButton.BackgroundTransparency = 1
             TabButton.Title.TextTransparency = 1
