@@ -1,10 +1,4 @@
---[[
-
-Save test 2.0
-
-]]
-
-local Release = "Beta 8 Mobile"
+local Release = "Beta 9 Mobile"
 local NotificationDuration = 6.5
 local RayfieldFolder = "Rayfield"
 local ConfigurationFolder = RayfieldFolder.."/Configurations"
@@ -109,7 +103,7 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 -- Interface Management
-local Rayfield = RunService:IsStudio() and script.Parent or game:GetObjects("rbxassetid://14446298082")[1]
+local Rayfield = game:GetObjects("rbxassetid://96976380378858")[1]
 Rayfield.Enabled = false
 
 if game["Run Service"]:IsStudio() then
@@ -159,10 +153,15 @@ local Topbar = Main.Topbar
 local Elements = Main.Elements
 local LoadingFrame = Main.LoadingFrame
 local TabList = Main.TabList
+local SearchBar = Main.Searchbar
+local Filler = SearchBar.CanvasGroup.Filler
+local Prompt = Main.Prompt
+local NotePrompt = Main.NotePrompt
 
 Rayfield.DisplayOrder = 100
 LoadingFrame.Version.Text = Release
 
+local Icons = useStudio and require(script.Parent.icons) or loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/icons.lua'))()
 
 -- Variables
 
@@ -175,8 +174,6 @@ local Debounce = false
 local Notifications = Rayfield.Notifications
 
 local SelectedTheme = RayfieldLibrary.Theme.Default
-
-local Icons = useStudio and require(script.Parent.icons) or loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/icons.lua'))()
 
 function ChangeTheme(ThemeName)
 	SelectedTheme = RayfieldLibrary.Theme[ThemeName]
@@ -207,6 +204,34 @@ function ChangeTheme(ThemeName)
 		end
 	end
 
+end
+
+local function getIcon(name : string)
+	name = string.match(string.lower(name), "^%s*(.*)%s*$") :: string
+	local sizedicons = Icons['48px']
+
+	local r = sizedicons[name]
+	if not r then
+		error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
+	end
+
+	local rirs = r[2]
+	local riro = r[3]
+
+	if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
+		error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+	end
+
+	local irs = Vector2.new(rirs[1], rirs[2])
+	local iro = Vector2.new(riro[1], riro[2])
+
+	local asset = {
+		id = r[1],
+		imageRectSize = irs,
+		imageRectOffset = iro,
+	}
+
+	return asset
 end
 
 local function AddDraggingFunctionality(DragPoint, Main)
@@ -242,34 +267,6 @@ local function AddDraggingFunctionality(DragPoint, Main)
 		end)
 	end)
 end   
-
-local function getIcon(name : string)
-	name = string.match(string.lower(name), "^%s*(.*)%s*$") :: string
-	local sizedicons = Icons['48px']
-
-	local r = sizedicons[name]
-	if not r then
-		error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
-	end
-
-	local rirs = r[2]
-	local riro = r[3]
-
-	if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
-		error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
-	end
-
-	local irs = Vector2.new(rirs[1], rirs[2])
-	local iro = Vector2.new(riro[1], riro[2])
-
-	local asset = {
-		id = r[1],
-		imageRectSize = irs,
-		imageRectOffset = iro,
-	}
-
-	return asset
-end
 
 local function PackColor(Color)
 	return {R = Color.R * 255, G = Color.G * 255, B = Color.B * 255}
@@ -663,11 +660,11 @@ function Hide()
 	
 	if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled or MobileEnabled then
 		TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 300)}):Play()
-		Rayfield.MobileButton.Visible = true
+--		Rayfield.MobileButton.Visible = true
 		
-		TweenService:Create(Rayfield.MobileButton, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-		TweenService:Create(Rayfield.MobileButton.Shadow, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {ImageTransparency = 0.6}):Play()
-		TweenService:Create(Rayfield.MobileButton.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
+--		TweenService:Create(Rayfield.MobileButton, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
+--		TweenService:Create(Rayfield.MobileButton.Shadow, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {ImageTransparency = 0.6}):Play()
+--		TweenService:Create(Rayfield.MobileButton.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 	else
 		TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 470, 0, 400)}):Play()
 		RayfieldLibrary:Notify({Title = "Interface Hidden", Content = "The interface has been hidden, you can unhide the interface by tapping "..RayfieldLibrary.MenuKeybind.Name, Duration = 7})
@@ -733,9 +730,9 @@ function Unhide()
 	if UserInputService.TouchEnabled and not UserInputService.KeyboardEnabled or MobileEnabled == true then
 		TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 500, 0, 300)}):Play()
 		
-		TweenService:Create(Rayfield.MobileButton, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
-		TweenService:Create(Rayfield.MobileButton.Shadow, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
-		TweenService:Create(Rayfield.MobileButton.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
+--		TweenService:Create(Rayfield.MobileButton, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 1}):Play()
+--		TweenService:Create(Rayfield.MobileButton.Shadow, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {ImageTransparency = 1}):Play()
+--		TweenService:Create(Rayfield.MobileButton.TextLabel, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {TextTransparency = 1}):Play()
 	else
 		TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 500, 0, 475)}):Play()
 	end
@@ -798,7 +795,7 @@ function Unhide()
 		end
 	end
 	wait(0.5)
-	Rayfield.MobileButton.Visible = false
+--	Rayfield.MobileButton.Visible = false
 	Minimised = false
 	Debounce = false
 end
@@ -933,7 +930,7 @@ function Minimise()
 end
 
 Main.BottomBar.Visible = false
-Rayfield.MobileButton.Visible = false
+--Rayfield.MobileButton.Visible = false
 
 function RayfieldLibrary:CreateWindow(Settings)
 	local Passthrough = false
@@ -977,7 +974,7 @@ function RayfieldLibrary:CreateWindow(Settings)
 	end)
 
 	AddDraggingFunctionality(Topbar,Main)
-	AddDraggingFunctionality(Rayfield.MobileButton.TextButton, Rayfield.MobileButton)
+--	AddDraggingFunctionality(Rayfield.MobileButton.TextButton, Rayfield.MobileButton)
 	
 	for _, TabButton in ipairs(TabList:GetChildren()) do
 		if TabButton.ClassName == "Frame" and TabButton.Name ~= "Placeholder" then
@@ -1239,23 +1236,23 @@ function RayfieldLibrary:CreateWindow(Settings)
 		TabButton.Title.TextWrapped = false
 		TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 30, 0, 30)
 
-		if TopTabButton and TopTabButton:FindFirstChild("Image") then
-			if Image then
-				if typeof(Image) == 'string' then
-					local asset = getIcon(Image)
-		
-					TopTabButton.Image.Image = 'rbxassetid://' .. asset.id
-					TopTabButton.Image.ImageRectOffset = asset.imageRectOffset
-					TopTabButton.Image.ImageRectSize = asset.imageRectSize
-				else
-					TopTabButton.Image.Image = "rbxassetid://" .. Image
-				end
-			else
-				warn("No image provided for TopTabButton")
-			end
+	if Image then
+		if typeof(Image) == 'string' then
+			local asset = getIcon(Image)
+
+			TabButton.Image.Image = 'rbxassetid://'..asset.id
+			TabButton.Image.ImageRectOffset = asset.imageRectOffset
+			TabButton.Image.ImageRectSize = asset.imageRectSize
 		else
-			warn("TopTabButton is nil or does not have an 'Image' child")
-		end		
+			TabButton.Image.Image = "rbxassetid://"..Image
+		end
+
+		TabButton.Title.AnchorPoint = Vector2.new(0, 0.5)
+		TabButton.Title.Position = UDim2.new(0, 37, 0.5, 0)
+		TabButton.Image.Visible = true
+		TabButton.Title.TextXAlignment = Enum.TextXAlignment.Left
+		TabButton.Size = UDim2.new(0, TabButton.Title.TextBounds.X + 52, 0, 30)
+	end
 
 		TabButton.BackgroundTransparency = 1
 		TabButton.Title.TextTransparency = 1
@@ -2538,11 +2535,11 @@ Topbar.ChangeSize.MouseButton1Click:Connect(function()
 	end
 end)
 
-Rayfield.MobileButton.TextButton.MouseButton1Click:Connect(function()
-	Hidden = false
-	Minimised = false
-	Unhide()
-end)
+--Rayfield.MobileButton.TextButton.MouseButton1Click:Connect(function()
+	--Hidden = false
+	--Minimised = false
+	--Unhide()
+--end)
 
 Topbar.Hide.MouseButton1Click:Connect(function()
 	if Debounce then return end
@@ -2585,6 +2582,7 @@ for _, TopbarButton in ipairs(Topbar:GetChildren()) do
 	end
 end
 
+Rayfield.Main.Topbar.Theme.Visible = false
 
 function RayfieldLibrary:LoadConfiguration()
 	if CEnabled then
@@ -2598,48 +2596,5 @@ function RayfieldLibrary:LoadConfiguration()
 end
 
 task.delay(3.5, RayfieldLibrary.LoadConfiguration, RayfieldLibrary)
-
-Rayfield.Main.Topbar.Theme.Visible = false
-local Search = Rayfield.Main.Topbar:FindFirstChild("Search")
-
-if Search then
-    Search.Parent = nil
-    
-    Search.Parent = Rayfield.Main.Topbar 
-    
-    Search.Position = UDim2.new(0.84, 0, 0.5, 0)
-else
-    warn("Search button not found!")
-end
-
-local Sections = Rayfield.Main:GetChildren()
-
-for _, section in pairs(Sections) do
-    if section:IsA("Frame") then
-        if section:FindFirstChild("Minimize") then
-            section.Minimize.Visible = false
-        end
-        
-        if section:FindFirstChild("Border") then
-            section.Border.Visible = false
-        end
-        
-        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    end
-end
-
-local Sections = Rayfield.Main:GetChildren()
-
-for _, section in pairs(Sections) do
-    if section:IsA("Frame") then
-        if section:FindFirstChild("Minimize") then
-            section.Minimize.Visible = false
-        end
-        if section:FindFirstChild("Border") then
-            section.Border.Visible = false
-        end
-        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    end
-end
 
 return RayfieldLibrary
