@@ -1,5 +1,5 @@
 --[[
-v3
+v2
 Rayfield Interface Suite
 by Sirius
 
@@ -6400,18 +6400,59 @@ else
     warn("Search button not found!")
 end
 
+local Sections = Rayfield.Main:GetChildren()
+
+for _, section in pairs(Sections) do
+    if section:IsA("Frame") then
+        if section:FindFirstChild("Minimize") then
+            section.Minimize.Visible = false
+        end
+        
+        if section:FindFirstChild("Border") then
+            section.Border.Visible = false
+        end
+        
+        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    end
+end
+--[[
+
+local Sections = Rayfield.Main:GetChildren()
+
+for _, section in pairs(Sections) do
+    if section:IsA("Frame") then
+        if section:FindFirstChild("Minimize") then
+            section.Minimize.Visible = false
+        end
+        if section:FindFirstChild("Border") then
+            section.Border.Visible = false
+        end
+        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    end
+end
+
+]]
+
+local Sections = Rayfield.Main:GetChildren()
+
+for _, section in pairs(Sections) do
+    if section:IsA("Frame") then
+        if section:FindFirstChild("Minimize") then
+            section.Minimize.Visible = false
+        end
+        if section:FindFirstChild("Border") then
+            section.Border.Visible = false
+        end
+        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    end
+end
+
 task.spawn(function()
     while true do
-        task.wait(1)
-
+        task.wait(0.5)
         for _, section in pairs(Rayfield.Main:GetChildren()) do
-            if section:IsA("Frame") then
-                if section:FindFirstChild("Border") then
-                    section.Border.Visible = false
-                end
-                if section:FindFirstChild("Minimize") then
-                    section.Minimize.Visible = false
-                end
+            if section:IsA("Frame") and section:FindFirstChild("Border") then
+                section.Border.Visible = false
             end
         end
     end
