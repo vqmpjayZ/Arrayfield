@@ -1,5 +1,5 @@
 --[[
-version = 0.2
+version = 0.3
 Rayfield Interface Suite
 by Sirius
 
@@ -3541,7 +3541,9 @@ function Unhide()
 						else
 							if element.Name ~= 'SectionTitle' then
                             TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-							TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+							if element.Name ~= "Section" and element.Name ~= "SectionTitle" then
+								TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+							end							
                             end
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 						end
@@ -3658,7 +3660,9 @@ function Maximise()
 						else
 							if element.Name ~= 'SectionTitle' then
                             TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-                            TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
+                            if element.Name ~= "Section" and element.Name ~= "SectionTitle" then
+								TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+							end							
                             end
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 						end
