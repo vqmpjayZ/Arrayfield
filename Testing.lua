@@ -1,5 +1,5 @@
 --[[
-v2
+version = 0.1
 Rayfield Interface Suite
 by Sirius
 
@@ -848,7 +848,13 @@ Issues with Mobile:
         wait(0.2)
     
         Elements.Visible = true
-    
+
+		for _, section in pairs(Rayfield.Main:GetChildren()) do
+			if section:IsA("Frame") and section:FindFirstChild("Border") then
+				section.Border.Visible = false
+			end
+		end
+
         for _, tab in ipairs(Elements:GetChildren()) do
             if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
                 for _, element in ipairs(tab:GetChildren()) do
@@ -861,6 +867,11 @@ Issues with Mobile:
                                 TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
                                 TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
                             end
+							for _, section in pairs(Rayfield.Main:GetChildren()) do
+								if section:IsA("Frame") and section:FindFirstChild("Border") then
+									section.Border.Visible = false
+								end
+							end
                             for _, child in ipairs(element:GetChildren()) do
                                 if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
                                     child.Visible = true
@@ -6415,7 +6426,6 @@ for _, section in pairs(Sections) do
         section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     end
 end
---[[
 
 local Sections = Rayfield.Main:GetChildren()
 
@@ -6430,33 +6440,6 @@ for _, section in pairs(Sections) do
         section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     end
 end
-
-]]
-
-local Sections = Rayfield.Main:GetChildren()
-
-for _, section in pairs(Sections) do
-    if section:IsA("Frame") then
-        if section:FindFirstChild("Minimize") then
-            section.Minimize.Visible = false
-        end
-        if section:FindFirstChild("Border") then
-            section.Border.Visible = false
-        end
-        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    end
-end
-
-task.spawn(function()
-    while true do
-        task.wait(0.5)
-        for _, section in pairs(Rayfield.Main:GetChildren()) do
-            if section:IsA("Frame") and section:FindFirstChild("Border") then
-                section.Border.Visible = false
-            end
-        end
-    end
-end)
 
 return RayfieldLibrary
-end
+end 
