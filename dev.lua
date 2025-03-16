@@ -1,5 +1,5 @@
 --[[
-
+v2
 Rayfield Interface Suite
 by Sirius
 
@@ -808,13 +808,6 @@ Issues with Mobile:
                                 TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
                                 TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
                                 TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
-								if element:GetAttribute("SectionType") == "normal" then
-									local minimizeButton = element:FindFirstChild("MinimizeButton")
-									if minimizeButton then
-										minimizeButton.Visible = false
-										minimizeButton.BackgroundTransparency = 1
-									end
-								end
                             end
                             for _, child in ipairs(element:GetChildren()) do
                                 if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
@@ -6436,6 +6429,24 @@ for _, section in pairs(Sections) do
         section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     end
 end
+
+local Topbar = Rayfield.Main.Topbar
+local MinimizeBackground = Topbar:FindFirstChild("Theme")
+
+local function FixMinimizeBug()
+    task.wait(0.1)
+    if MinimizeBackground then
+        MinimizeBackground.Visible = false
+    end
+end
+
+Rayfield.Minimize.Changed:Connect(function()
+    if not Rayfield.Minimize.Value then 
+        FixMinimizeBug()
+    end
+end)
+
+FixMinimizeBug()
 
 return RayfieldLibrary
 end
