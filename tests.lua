@@ -1,5 +1,5 @@
 --[[
-version = 0.3
+version = 0.4
 Rayfield Interface Suite
 by Sirius
 
@@ -3185,6 +3185,7 @@ local neon = (function()  --Open sourced neon module
 	return module
 
 end)()
+
 function CloseNPrompt()
 	local Infos= TweenInfo.new(.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out)
 	TweenService:Create(NotePrompt,Infos,{BackgroundTransparency = 1,Size = UDim2.fromOffset(436,92),Position = UDim2.fromScale(0.5,0.19)}):Play()
@@ -3717,6 +3718,17 @@ function Maximise()
 	wait(0.5)
 	Debounce = false
 end
+
+for _, tab in ipairs(Elements:GetChildren()) do
+    if tab:IsA("ScrollingFrame") then
+        for _, section in ipairs(tab:GetChildren()) do
+            if section:IsA("Frame") and section:FindFirstChild("UIStroke") then
+                section.UIStroke.Transparency = 1
+            end
+        end
+    end
+end
+
 function OpenSideBar()
 	Debounce = true
 	Main.SideTabList.Visible = true 
@@ -6437,6 +6449,16 @@ for _, section in pairs(Sections) do
             section.Border.Visible = false
         end
         section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    end
+end
+
+for _, tab in ipairs(Elements:GetChildren()) do
+    if tab:IsA("ScrollingFrame") then
+        for _, section in ipairs(tab:GetChildren()) do
+            if section:IsA("Frame") and section:FindFirstChild("UIStroke") then
+                section.UIStroke.Transparency = 1
+            end
+        end
     end
 end
 
