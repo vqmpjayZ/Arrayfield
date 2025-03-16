@@ -1,5 +1,5 @@
 --[[
-version = 0.1
+version = 0.2
 Rayfield Interface Suite
 by Sirius
 
@@ -867,11 +867,6 @@ Issues with Mobile:
                                 TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
                                 TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
                             end
-							for _, section in pairs(Rayfield.Main:GetChildren()) do
-								if section:IsA("Frame") and section:FindFirstChild("Border") then
-									section.Border.Visible = false
-								end
-							end
                             for _, child in ipairs(element:GetChildren()) do
                                 if child.ClassName == "Frame" or child.ClassName == "TextLabel" or child.ClassName == "TextBox" or child.ClassName == "ImageButton" or child.ClassName == "ImageLabel" then
                                     child.Visible = true
@@ -3546,7 +3541,7 @@ function Unhide()
 						else
 							if element.Name ~= 'SectionTitle' then
                             TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-							TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+							TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
                             end
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 						end
@@ -3663,7 +3658,7 @@ function Maximise()
 						else
 							if element.Name ~= 'SectionTitle' then
                             TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-                            TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
+                            TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 1}):Play()
                             end
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 						end
