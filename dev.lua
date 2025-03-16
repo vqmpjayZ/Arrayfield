@@ -6400,53 +6400,22 @@ else
     warn("Search button not found!")
 end
 
-local Sections = Rayfield.Main:GetChildren()
+task.spawn(function()
+    while true do
+        task.wait(1)
 
-for _, section in pairs(Sections) do
-    if section:IsA("Frame") then
-        if section:FindFirstChild("Minimize") then
-            section.Minimize.Visible = false
+        for _, section in pairs(Rayfield.Main:GetChildren()) do
+            if section:IsA("Frame") then
+                if section:FindFirstChild("Border") then
+                    section.Border.Visible = false
+                end
+                if section:FindFirstChild("Minimize") then
+                    section.Minimize.Visible = false
+                end
+            end
         end
-        
-        if section:FindFirstChild("Border") then
-            section.Border.Visible = false
-        end
-        
-        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    end
-end
-
-local Sections = Rayfield.Main:GetChildren()
-
-for _, section in pairs(Sections) do
-    if section:IsA("Frame") then
-        if section:FindFirstChild("Minimize") then
-            section.Minimize.Visible = false
-        end
-        if section:FindFirstChild("Border") then
-            section.Border.Visible = false
-        end
-        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    end
-end
-
-local Topbar = Rayfield.Main.Topbar
-local MinimizeBackground = Topbar:FindFirstChild("Theme")
-
-local function FixMinimizeBug()
-    task.wait(0.1)
-    if MinimizeBackground then
-        MinimizeBackground.Visible = false
-    end
-end
-
-Rayfield.Minimize.Changed:Connect(function()
-    if not Rayfield.Minimize.Value then 
-        FixMinimizeBug()
     end
 end)
-
-FixMinimizeBug()
 
 return RayfieldLibrary
 end
