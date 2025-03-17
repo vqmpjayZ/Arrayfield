@@ -1,4 +1,4 @@
---[[2
+--[[
 
 Rayfield Interface Suite
 by Sirius
@@ -6431,20 +6431,13 @@ for _, section in pairs(Sections) do
 end
 
 return RayfieldLibrary
+
+local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
+
+for _, Descendant in ipairs(Elements:GetDescendants()) do
+    if Descendant:IsA("Frame") and Descendant.Name == "SectionTitle" then
+        Descendant.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    end
 end
 
-task.spawn(function()
-    while task.wait(1) do -- Adjust the time if needed
-        local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
-
-        for _, Tab in ipairs(Elements:GetChildren()) do
-            if Tab:IsA("Frame") and Tab.Name ~= "Template" then
-                for _, Section in ipairs(Tab:GetChildren()) do
-                    if Section:IsA("Frame") and Section:FindFirstChild("SectionTitle") then
-                        Section.SectionTitle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-                    end
-                end
-            end
-        end
-    end
-end)
+end
