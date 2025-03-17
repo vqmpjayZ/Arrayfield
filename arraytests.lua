@@ -1,5 +1,5 @@
 --[[
-version = 0.4
+
 Rayfield Interface Suite
 by Sirius
 
@@ -848,13 +848,7 @@ Issues with Mobile:
         wait(0.2)
     
         Elements.Visible = true
-
-		for _, section in pairs(Rayfield.Main:GetChildren()) do
-			if section:IsA("Frame") and section:FindFirstChild("Border") then
-				section.Border.Visible = false
-			end
-		end
-
+    
         for _, tab in ipairs(Elements:GetChildren()) do
             if tab.Name ~= "Template" and tab.ClassName == "ScrollingFrame" and tab.Name ~= "Placeholder" then
                 for _, element in ipairs(tab:GetChildren()) do
@@ -3185,7 +3179,6 @@ local neon = (function()  --Open sourced neon module
 	return module
 
 end)()
-
 function CloseNPrompt()
 	local Infos= TweenInfo.new(.2,Enum.EasingStyle.Quad,Enum.EasingDirection.Out)
 	TweenService:Create(NotePrompt,Infos,{BackgroundTransparency = 1,Size = UDim2.fromOffset(436,92),Position = UDim2.fromScale(0.5,0.19)}):Play()
@@ -3542,9 +3535,7 @@ function Unhide()
 						else
 							if element.Name ~= 'SectionTitle' then
                             TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-							if element.Name ~= "Section" and element.Name ~= "SectionTitle" then
-								TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-							end							
+							TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
                             end
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 						end
@@ -3575,6 +3566,10 @@ function Unhide()
 	wait(0.5)
 	Minimised = false
 	Debounce = false
+	local Custom = game:GetService("CoreGui").HUI.Rayfield.Main.Elements:FindFirstChild("Custom")
+if Custom then
+    Custom.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+end
 end
 function CloseSearch()
 	Debounce = true
@@ -3661,9 +3656,7 @@ function Maximise()
 						else
 							if element.Name ~= 'SectionTitle' then
                             TweenService:Create(element, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
-                            if element.Name ~= "Section" and element.Name ~= "SectionTitle" then
-								TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-							end							
+                            TweenService:Create(element.UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
                             end
 							TweenService:Create(element.Title, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {TextTransparency = 0}):Play()
 						end
@@ -3717,18 +3710,12 @@ function Maximise()
 
 	wait(0.5)
 	Debounce = false
+	local Custom = game:GetService("CoreGui").HUI.Rayfield.Main.Elements:FindFirstChild("Custom")
+if Custom then
+    Custom.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 end
 
-for _, tab in ipairs(Elements:GetChildren()) do
-    if tab:IsA("ScrollingFrame") then
-        for _, section in ipairs(tab:GetChildren()) do
-            if section:IsA("Frame") and section:FindFirstChild("UIStroke") then
-                section.UIStroke.Transparency = 1
-            end
-        end
-    end
 end
-
 function OpenSideBar()
 	Debounce = true
 	Main.SideTabList.Visible = true 
@@ -6452,15 +6439,5 @@ for _, section in pairs(Sections) do
     end
 end
 
-for _, tab in ipairs(Elements:GetChildren()) do
-    if tab:IsA("ScrollingFrame") then
-        for _, section in ipairs(tab:GetChildren()) do
-            if section:IsA("Frame") and section:FindFirstChild("UIStroke") then
-                section.UIStroke.Transparency = 1
-            end
-        end
-    end
-end
-
 return RayfieldLibrary
-end 
+end
