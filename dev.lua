@@ -1,4 +1,4 @@
---[[
+--[[2
 
 Rayfield Interface Suite
 by Sirius
@@ -3566,17 +3566,6 @@ function Unhide()
 	wait(0.5)
 	Minimised = false
 	Debounce = false
-	local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
-
-	for _, Tab in ipairs(Elements:GetChildren()) do
-		if Tab:IsA("Frame") and Tab.Name ~= "Template" then
-			for _, Section in ipairs(Tab:GetChildren()) do
-				if Section:IsA("Frame") and Section:FindFirstChild("SectionTitle") then
-					Section.SectionTitle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-				end
-			end
-		end
-	end	
 end
 function CloseSearch()
 	Debounce = true
@@ -3717,18 +3706,7 @@ function Maximise()
 
 	wait(0.5)
 	Debounce = false
-	local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
-
-	for _, Tab in ipairs(Elements:GetChildren()) do
-		if Tab:IsA("Frame") and Tab.Name ~= "Template" then
-			for _, Section in ipairs(Tab:GetChildren()) do
-				if Section:IsA("Frame") and Section:FindFirstChild("SectionTitle") then
-					Section.SectionTitle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-				end
-			end
-		end
-	end
-	
+end
 function OpenSideBar()
 	Debounce = true
 	Main.SideTabList.Visible = true 
@@ -6454,3 +6432,19 @@ end
 
 return RayfieldLibrary
 end
+
+task.spawn(function()
+    while task.wait(1) do -- Adjust the time if needed
+        local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
+
+        for _, Tab in ipairs(Elements:GetChildren()) do
+            if Tab:IsA("Frame") and Tab.Name ~= "Template" then
+                for _, Section in ipairs(Tab:GetChildren()) do
+                    if Section:IsA("Frame") and Section:FindFirstChild("SectionTitle") then
+                        Section.SectionTitle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+                    end
+                end
+            end
+        end
+    end
+end)
