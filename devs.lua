@@ -6430,8 +6430,6 @@ for _, section in pairs(Sections) do
     end
 end
 
-return RayfieldLibrary
-
 local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
 
 for _, Descendant in ipairs(Elements:GetDescendants()) do
@@ -6440,4 +6438,5 @@ for _, Descendant in ipairs(Elements:GetDescendants()) do
     end
 end
 
+return RayfieldLibrary
 end
