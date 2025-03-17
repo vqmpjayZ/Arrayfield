@@ -1,5 +1,5 @@
 --[[
-
+v2
 Rayfield Interface Suite
 by Sirius
 
@@ -3567,9 +3567,12 @@ function Unhide()
 	Minimised = false
 	Debounce = false
 	local Custom = game:GetService("CoreGui").HUI.Rayfield.Main.Elements:FindFirstChild("Custom")
-if Custom then
-    Custom.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-end
+	if Custom then
+		local SectionTitle = Custom:FindFirstChild("SectionTitle")
+		if SectionTitle then
+			SectionTitle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		end
+	end	
 end
 function CloseSearch()
 	Debounce = true
@@ -3711,9 +3714,12 @@ function Maximise()
 	wait(0.5)
 	Debounce = false
 	local Custom = game:GetService("CoreGui").HUI.Rayfield.Main.Elements:FindFirstChild("Custom")
-if Custom then
-    Custom.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-end
+	if Custom then
+		local SectionTitle = Custom:FindFirstChild("SectionTitle")
+		if SectionTitle then
+			SectionTitle.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+		end
+	end	
 
 end
 function OpenSideBar()
