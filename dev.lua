@@ -6403,7 +6403,7 @@ end
 local Sections = Rayfield.Main:GetChildren()
 
 for _, section in pairs(Sections) do
-    if section:IsA("Frame") then
+    if section:IsA("Frame") and section:GetAttribute("SectionType") == "normal" then
         if section:FindFirstChild("Minimize") then
             section.Minimize.Visible = false
         end
@@ -6412,20 +6412,6 @@ for _, section in pairs(Sections) do
             section.Border.Visible = false
         end
         
-        section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    end
-end
-
-local Sections = Rayfield.Main:GetChildren()
-
-for _, section in pairs(Sections) do
-    if section:IsA("Frame") then
-        if section:FindFirstChild("Minimize") then
-            section.Minimize.Visible = false
-        end
-        if section:FindFirstChild("Border") then
-            section.Border.Visible = false
-        end
         section.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     end
 end
@@ -6434,7 +6420,10 @@ local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
 
 for _, Descendant in ipairs(Elements:GetDescendants()) do
     if Descendant:IsA("Frame") and Descendant.Name == "SectionTitle" then
-        Descendant.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        local ParentSection = Descendant.Parent
+        if ParentSection and ParentSection:GetAttribute("SectionType") == "normal" then
+            Descendant.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        end
     end
 end
 
