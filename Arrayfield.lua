@@ -6430,5 +6430,13 @@ for _, section in pairs(Sections) do
     end
 end
 
+local Elements = game:GetService("CoreGui").HUI.Rayfield.Main.Elements
+
+for _, Descendant in ipairs(Elements:GetDescendants()) do
+    if Descendant:IsA("Frame") and Descendant.Name == "SectionTitle" then
+        Descendant.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    end
+end
+
 return RayfieldLibrary
 end
