@@ -21,7 +21,7 @@ Change Logs:
 - Fixed Search not being able to search for elements parented to sections
 - Removed Themes Button (pointless)
 - Revamped Design
-1
+
 ]]
 
 local Release = "Release 2B"
@@ -3651,7 +3651,6 @@ ContextActionService:BindAction("Field",function(name,inputState,inputObject)
 	end
 end,true)
 --]]
-
 local Icons = useStudio and require(script.Parent.icons) or loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/icons.lua'))()
 
 local function getIcon(name)
@@ -3683,6 +3682,7 @@ local function getIcon(name)
 end
 
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 local FieldScreen = Instance.new("ScreenGui")
 FieldScreen.DisplayOrder = 100
 FieldScreen.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
@@ -3706,8 +3706,8 @@ UICorner.Parent = UniButton
 
 local UIGradient = Instance.new("UIGradient")
 UIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 100, 100)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 120, 120)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 60, 60))
 })
 UIGradient.Rotation = 45
 UIGradient.Parent = UniButton
@@ -3718,13 +3718,25 @@ UIStroke.Thickness = 1.5
 UIStroke.Transparency = 0.2
 UIStroke.Parent = UniButton
 
+local Glow = Instance.new("ImageLabel")
+Glow.Name = "Glow"
+Glow.BackgroundTransparency = 1
+Glow.Position = UDim2.new(0.5, 0, 0.5, 0)
+Glow.AnchorPoint = Vector2.new(0.5, 0.5)
+Glow.Size = UDim2.new(1.5, 0, 1.5, 0)
+Glow.ZIndex = 9
+Glow.Image = "rbxassetid://4996891970" 
+Glow.ImageColor3 = Color3.fromRGB(255, 255, 255)
+Glow.ImageTransparency = 0.9
+Glow.Parent = UniButton
+
 local Shadow = Instance.new("ImageLabel")
 Shadow.Name = "Shadow"
 Shadow.BackgroundTransparency = 1
 Shadow.Position = UDim2.new(0.5, 0, 0.5, 0)
 Shadow.AnchorPoint = Vector2.new(0.5, 0.5)
 Shadow.Size = UDim2.new(1.2, 0, 1.2, 0)
-Shadow.ZIndex = 9
+Shadow.ZIndex = 8
 Shadow.Image = "rbxassetid://7912134082"
 Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
 Shadow.ImageTransparency = 0.6
@@ -3757,44 +3769,69 @@ UniBoxButton.Text = ""
 UniBoxButton.Parent = UniButton
 
 local dragging = false
+local dragInput
 local dragStart
 local startPos
 
-UniBoxButton.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = true
-        dragStart = input.Position
-        startPos = UniButton.Position
-    end
-end)
+local function updateDrag(input)
+    if not dragging then return end
+    
+    local delta = input.Position - dragStart
+    UniButton.Position = UDim2.new(
+        startPos.X.Scale, 
+        startPos.X.Offset + delta.X,
+        startPos.Y.Scale, 
+        startPos.Y.Offset + delta.Y
+    )
+end
 
-UniBoxButton.InputChanged:Connect(function(input)
-    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        local delta = input.Position - dragStart
-        UniButton.Position = UDim2.new(
-            startPos.X.Scale, 
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale, 
-            startPos.Y.Offset + delta.Y
-        )
-    end
-end)
+UniBoxButton.MouseButton1Down:Connect(function(x, y)
+    dragging = true
+    dragStart = Vector2.new(x, y)
+    startPos = UniButton.Position
+    
+    local connection
+    connection = UserInputService.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or 
+           input.UserInputType == Enum.UserInputType.Touch then
+            updateDrag(input)
+        end
+    end)
 
-UniBoxButton.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
-        dragging = false
-    end
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or 
+           input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+            if connection then connection:Disconnect() end
+        end
+    end)
 end)
 
 UniBoxButton.MouseEnter:Connect(function()
     TweenService:Create(UniButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
-        BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        BackgroundColor3 = Color3.fromRGB(110, 110, 110)
+    }):Play()
+    
+    TweenService:Create(Glow, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+        ImageTransparency = 0.7
+    }):Play()
+    
+    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+        Transparency = 0
     }):Play()
 end)
 
 UniBoxButton.MouseLeave:Connect(function()
     TweenService:Create(UniButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
         BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    }):Play()
+    
+    TweenService:Create(Glow, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+        ImageTransparency = 0.9
+    }):Play()
+    
+    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+        Transparency = 0.2
     }):Play()
 end)
 
@@ -3816,6 +3853,26 @@ UniBoxButton.MouseButton1Click:Connect(function()
         EyeIcon.ImageRectOffset = eyeOffAsset.imageRectOffset
         Hide()
     end
+
+    TweenService:Create(UniButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
+        Size = UDim2.new(0, 32, 0, 32)
+    }):Play()
+    
+    TweenService:Create(Glow, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
+        ImageTransparency = 0.5,
+        Size = UDim2.new(1.7, 0, 1.7, 0)
+    }):Play()
+    
+    task.delay(0.1, function()
+        TweenService:Create(UniButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
+            Size = UDim2.new(0, 36, 0, 36)
+        }):Play()
+        
+        TweenService:Create(Glow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
+            ImageTransparency = 0.9,
+            Size = UDim2.new(1.5, 0, 1.5, 0)
+        }):Play()
+    end)
 end)
 
 ArrayFieldLibrary.UniButton = UniButton
