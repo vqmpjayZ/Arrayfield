@@ -1,4 +1,29 @@
---dummy test
+--[[
+
+ArrayField Interface Suite
+by Meta
+
+Original by Sirius
+
+-------------------------------
+Arrays  | Designing + Programming + New Features
+vqmpjay | Designing + Programming
+
+]]
+
+--[[
+
+Change Logs:
+- Added Lucide icons support to Tabs and Notifications
+- Added rich text support to Paragraphs and Labels
+- Fixed Paragraphs not appearing when not parented to sections
+- Fixed long Paragraphs getting cut off when parented to sections
+- Fixed Search not being able to search for elements parented to sections
+- Removed Themes Button (pointless)
+- Revamped Design
+
+]]
+
 local Release = "Release 2B"
 local NotificationDuration = 6.5
 local ArrayFieldFolder = "ArrayField"
@@ -3637,7 +3662,7 @@ local UniButton = Instance.new("Frame")
 UniButton.Name = "UniButton"
 UniButton.Active = true
 UniButton.ZIndex = 10
-UniButton.Position = UDim2.new(0.8, 0, 0.1, 0)
+UniButton.Position = UDim2.new(0.92, 0, 0.05, 0)
 UniButton.BorderSizePixel = 0
 UniButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 UniButton.Size = UDim2.new(0, 36, 0, 36)
@@ -3680,7 +3705,7 @@ EyeIcon.BackgroundTransparency = 1
 EyeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
 EyeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
 EyeIcon.Size = UDim2.new(0.6, 0, 0.6, 0)
-EyeIcon.Image = "rbxassetid://14958620447"
+EyeIcon.Image = getIcon("eye")
 EyeIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
 EyeIcon.Parent = UniButton
 
@@ -3701,12 +3726,25 @@ local startPos
 
 local function updateDrag(input)
     local delta = input.Position - dragStart
-    UniButton.Position = UDim2.new(
+    local newPosition = UDim2.new(
         startPos.X.Scale, 
         startPos.X.Offset + delta.X,
         startPos.Y.Scale, 
         startPos.Y.Offset + delta.Y
     )
+    
+    local screenSize = FieldScreen.AbsoluteSize
+    local buttonSize = UniButton.AbsoluteSize
+    
+    local minX = 0
+    local maxX = screenSize.X - buttonSize.X
+    local minY = 0
+    local maxY = screenSize.Y - buttonSize.Y
+    
+    local newX = math.clamp(newPosition.X.Offset, minX, maxX)
+    local newY = math.clamp(newPosition.Y.Offset, minY, maxY)
+    
+    UniButton.Position = UDim2.new(newPosition.X.Scale, newX, newPosition.Y.Scale, newY)
 end
 
 UniBoxButton.InputBegan:Connect(function(input)
@@ -3733,10 +3771,12 @@ UniBoxButton.MouseButton1Click:Connect(function()
     if Debounce then return end
     if Hidden then
         Hidden = false
+        EyeIcon.Image = getIcon("eye")
         Unhide()
     else
         if not SearchHided then spawn(CloseSearch) end
         Hidden = true
+        EyeIcon.Image = getIcon("eye-off")
         Hide()
     end
 end)
