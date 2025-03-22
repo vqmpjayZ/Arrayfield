@@ -1,29 +1,4 @@
---[[
-
-ArrayField Interface Suite
-by Meta
-
-Original by Sirius
-
--------------------------------
-Arrays  | Designing + Programming + New Features
-vqmpjay | Designing + Programming
-
-]]
-
---[[
-
-Change Logs:
-- Added Lucide icons support to Tabs and Notifications
-- Added rich text support to Paragraphs and Labels
-- Fixed Paragraphs not appearing when not parented to sections
-- Fixed long Paragraphs getting cut off when parented to sections
-- Fixed Search not being able to search for elements parented to sections
-- Removed Themes Button (pointless)
-- Revamped Design
-
-]]
-
+--dummy test
 local Release = "Release 2B"
 local NotificationDuration = 6.5
 local ArrayFieldFolder = "ArrayField"
@@ -3664,30 +3639,28 @@ UniButton.Active = true
 UniButton.ZIndex = 10
 UniButton.Position = UDim2.new(0.8, 0, 0.1, 0)
 UniButton.BorderSizePixel = 0
-UniButton.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
-UniButton.Size = UDim2.new(0, 42, 0, 42)
+UniButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+UniButton.Size = UDim2.new(0, 36, 0, 36)
 UniButton.SizeConstraint = Enum.SizeConstraint.RelativeXY
 UniButton.Parent = FieldScreen
 
 local UICorner = Instance.new("UICorner")
-UICorner.CornerRadius = UDim.new(1, 0)
+UICorner.CornerRadius = UDim.new(0.3, 0)
 UICorner.Parent = UniButton
+
+local UIGradient = Instance.new("UIGradient")
+UIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 100, 100)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(70, 70, 70))
+})
+UIGradient.Rotation = 45
+UIGradient.Parent = UniButton
 
 local UIStroke = Instance.new("UIStroke")
 UIStroke.Color = Color3.fromRGB(255, 255, 255)
 UIStroke.Thickness = 1.5
 UIStroke.Transparency = 0.2
 UIStroke.Parent = UniButton
-
-local EyeIcon = Instance.new("ImageLabel")
-EyeIcon.Name = "EyeIcon"
-EyeIcon.BackgroundTransparency = 1
-EyeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
-EyeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
-EyeIcon.Size = UDim2.new(0.6, 0, 0.6, 0)
-EyeIcon.Image = getIcon("eye")
-EyeIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
-EyeIcon.Parent = UniButton
 
 local Shadow = Instance.new("ImageLabel")
 Shadow.Name = "Shadow"
@@ -3701,6 +3674,16 @@ Shadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
 Shadow.ImageTransparency = 0.6
 Shadow.Parent = UniButton
 
+local EyeIcon = Instance.new("ImageLabel")
+EyeIcon.Name = "EyeIcon"
+EyeIcon.BackgroundTransparency = 1
+EyeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+EyeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+EyeIcon.Size = UDim2.new(0.6, 0, 0.6, 0)
+EyeIcon.Image = "rbxassetid://14958620447"
+EyeIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+EyeIcon.Parent = UniButton
+
 local UniBoxButton = Instance.new("TextButton")
 UniBoxButton.Name = "UniBoxButton"
 UniBoxButton.ZIndex = 11
@@ -3712,49 +3695,18 @@ UniBoxButton.BackgroundTransparency = 1
 UniBoxButton.Text = ""
 UniBoxButton.Parent = UniButton
 
-local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
 local dragging = false
-local dragInput
 local dragStart
 local startPos
 
-UniBoxButton.MouseEnter:Connect(function()
-    TweenService:Create(UniButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(240, 70, 70)}):Play()
-    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0}):Play()
-end)
-
-UniBoxButton.MouseLeave:Connect(function()
-    TweenService:Create(UniButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {BackgroundColor3 = Color3.fromRGB(220, 50, 50)}):Play()
-    TweenService:Create(UIStroke, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {Transparency = 0.2}):Play()
-end)
-
-UniBoxButton.MouseButton1Down:Connect(function()
-    TweenService:Create(UniButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 38, 0, 38)}):Play()
-end)
-
-UniBoxButton.MouseButton1Up:Connect(function()
-    TweenService:Create(UniButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 42, 0, 42)}):Play()
-end)
-
-local function update(input)
+local function updateDrag(input)
     local delta = input.Position - dragStart
-    local newPosition = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-
-    local screenSize = FieldScreen.AbsoluteSize
-    local buttonSize = UniButton.AbsoluteSize
-    
-    local minX = 0
-    local maxX = screenSize.X - buttonSize.X
-    local minY = 0
-    local maxY = screenSize.Y - buttonSize.Y
-    
-    local newX = math.clamp(newPosition.X.Offset, minX, maxX)
-    local newY = math.clamp(newPosition.Y.Offset, minY, maxY)
-    
-    TweenService:Create(UniButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
-        Position = UDim2.new(newPosition.X.Scale, newX, newPosition.Y.Scale, newY)
-    }):Play()
+    UniButton.Position = UDim2.new(
+        startPos.X.Scale, 
+        startPos.X.Offset + delta.X,
+        startPos.Y.Scale, 
+        startPos.Y.Offset + delta.Y
+    )
 end
 
 UniBoxButton.InputBegan:Connect(function(input)
@@ -3762,55 +3714,31 @@ UniBoxButton.InputBegan:Connect(function(input)
         dragging = true
         dragStart = input.Position
         startPos = UniButton.Position
-        
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-            end
-        end)
     end
 end)
 
 UniBoxButton.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-        dragInput = input
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        updateDrag(input)
     end
 end)
 
-UserInputService.InputChanged:Connect(function(input)
-    if input == dragInput and dragging then
-        update(input)
+UniBoxButton.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
     end
 end)
 
 UniBoxButton.MouseButton1Click:Connect(function()
     if Debounce then return end
-
     if Hidden then
         Hidden = false
-        TweenService:Create(EyeIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
-        EyeIcon.Image = getIcon("eye")
         Unhide()
     else
         if not SearchHided then spawn(CloseSearch) end
         Hidden = true
-        TweenService:Create(EyeIcon, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {ImageTransparency = 0}):Play()
-        EyeIcon.Image = getIcon("eye-off")
         Hide()
     end
-
-    local pulse = TweenService:Create(Shadow, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
-        Size = UDim2.new(1.5, 0, 1.5, 0),
-        ImageTransparency = 0.9
-    })
-    pulse:Play()
-    
-    pulse.Completed:Connect(function()
-        TweenService:Create(Shadow, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {
-            Size = UDim2.new(1.2, 0, 1.2, 0),
-            ImageTransparency = 0.6
-        }):Play()
-    end)
 end)
 
 ArrayFieldLibrary.UniButton = UniButton
