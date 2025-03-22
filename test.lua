@@ -21,7 +21,7 @@ Change Logs:
 - Fixed Search not being able to search for elements parented to sections
 - Removed Themes Button (pointless)
 - Revamped Design
-
+1
 ]]
 
 local Release = "Release 2B"
@@ -3651,6 +3651,38 @@ ContextActionService:BindAction("Field",function(name,inputState,inputObject)
 	end
 end,true)
 --]]
+
+local Icons = useStudio and require(script.Parent.icons) or loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/icons.lua'))()
+
+local function getIcon(name)
+    name = string.match(string.lower(name), "^%s*(.*)%s*$")
+    local sizedicons = Icons['48px']
+    
+    local r = sizedicons[name]
+    if not r then
+        error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
+    end
+    
+    local rirs = r[2]
+    local riro = r[3]
+    
+    if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
+        error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
+    end
+    
+    local irs = Vector2.new(rirs[1], rirs[2])
+    local iro = Vector2.new(riro[1], riro[2])
+    
+    local asset = {
+        id = r[1],
+        imageRectSize = irs,
+        imageRectOffset = iro,
+    }
+    
+    return asset
+end
+
+local TweenService = game:GetService("TweenService")
 local FieldScreen = Instance.new("ScreenGui")
 FieldScreen.DisplayOrder = 100
 FieldScreen.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
@@ -3661,7 +3693,7 @@ local UniButton = Instance.new("Frame")
 UniButton.Name = "UniButton"
 UniButton.Active = true
 UniButton.ZIndex = 10
-UniButton.Position = UDim2.new(1, -45, 0, 10) 
+UniButton.Position = UDim2.new(1, -45, 0, 10)
 UniButton.BorderSizePixel = 0
 UniButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 UniButton.Size = UDim2.new(0, 36, 0, 36)
@@ -3705,9 +3737,13 @@ EyeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
 EyeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
 EyeIcon.Size = UDim2.new(0.6, 0, 0.6, 0)
 EyeIcon.ZIndex = 12
-EyeIcon.Image = "rbxassetid://10723407389"
 EyeIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
 EyeIcon.Parent = UniButton
+
+local eyeAsset = getIcon("eye")
+EyeIcon.Image = "rbxassetid://" .. eyeAsset.id
+EyeIcon.ImageRectSize = eyeAsset.imageRectSize
+EyeIcon.ImageRectOffset = eyeAsset.imageRectOffset
 
 local UniBoxButton = Instance.new("TextButton")
 UniBoxButton.Name = "UniBoxButton"
@@ -3724,29 +3760,6 @@ local dragging = false
 local dragStart
 local startPos
 
-local function updateDrag(input)
-    local delta = input.Position - dragStart
-    local newPosition = UDim2.new(
-        startPos.X.Scale, 
-        startPos.X.Offset + delta.X,
-        startPos.Y.Scale, 
-        startPos.Y.Offset + delta.Y
-    )
-    
-    local screenSize = FieldScreen.AbsoluteSize
-    local buttonSize = UniButton.AbsoluteSize
-    
-    local minX = 0
-    local maxX = screenSize.X - buttonSize.X
-    local minY = 0
-    local maxY = screenSize.Y - buttonSize.Y
-    
-    local newX = math.clamp(newPosition.X.Offset, minX, maxX)
-    local newY = math.clamp(newPosition.Y.Offset, minY, maxY)
-    
-    UniButton.Position = UDim2.new(newPosition.X.Scale, newX, newPosition.Y.Scale, newY)
-end
-
 UniBoxButton.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
         dragging = true
@@ -3757,7 +3770,13 @@ end)
 
 UniBoxButton.InputChanged:Connect(function(input)
     if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-        updateDrag(input)
+        local delta = input.Position - dragStart
+        UniButton.Position = UDim2.new(
+            startPos.X.Scale, 
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale, 
+            startPos.Y.Offset + delta.Y
+        )
     end
 end)
 
@@ -3767,16 +3786,34 @@ UniBoxButton.InputEnded:Connect(function(input)
     end
 end)
 
+UniBoxButton.MouseEnter:Connect(function()
+    TweenService:Create(UniButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+        BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+    }):Play()
+end)
+
+UniBoxButton.MouseLeave:Connect(function()
+    TweenService:Create(UniButton, TweenInfo.new(0.3, Enum.EasingStyle.Quint), {
+        BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    }):Play()
+end)
+
 UniBoxButton.MouseButton1Click:Connect(function()
     if Debounce then return end
     if Hidden then
         Hidden = false
-        EyeIcon.Image = "rbxassetid://10723407389"
+        local eyeAsset = getIcon("eye")
+        EyeIcon.Image = "rbxassetid://" .. eyeAsset.id
+        EyeIcon.ImageRectSize = eyeAsset.imageRectSize
+        EyeIcon.ImageRectOffset = eyeAsset.imageRectOffset
         Unhide()
     else
         if not SearchHided then spawn(CloseSearch) end
         Hidden = true
-        EyeIcon.Image = "rbxassetid://10723408528"
+        local eyeOffAsset = getIcon("eye-off")
+        EyeIcon.Image = "rbxassetid://" .. eyeOffAsset.id
+        EyeIcon.ImageRectSize = eyeOffAsset.imageRectSize
+        EyeIcon.ImageRectOffset = eyeOffAsset.imageRectOffset
         Hide()
     end
 end)
@@ -3893,7 +3930,7 @@ for _, section in pairs(Sections) do
     end
 end
 
-local Elements = game:GetService("CoreGui").HUI.ArrayField.Main.Elements
+local Elements = ArrayField.Main.Elements
 
 for _, Descendant in ipairs(Elements:GetDescendants()) do
     if Descendant:IsA("Frame") and Descendant.Name == "SectionTitle" then
