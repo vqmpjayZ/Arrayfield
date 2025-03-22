@@ -7,7 +7,7 @@ Original by Sirius
 
 -------------------------------
 Arrays  | Designing + Programming + New Features
-vqmpjay | Designing + Programming
+vqmpjay | Designing + Programming + New Features
 
 ]]
 
@@ -3651,35 +3651,6 @@ ContextActionService:BindAction("Field",function(name,inputState,inputObject)
 	end
 end,true)
 --]]
-local Icons = useStudio and require(script.Parent.icons) or loadstring(game:HttpGet('https://raw.githubusercontent.com/SiriusSoftwareLtd/Rayfield/refs/heads/main/icons.lua'))()
-
-local function getIcon(name)
-    name = string.match(string.lower(name), "^%s*(.*)%s*$")
-    local sizedicons = Icons['48px']
-    
-    local r = sizedicons[name]
-    if not r then
-        error("Lucide Icons: Failed to find icon by the name of \"" .. name .. "\".", 2)
-    end
-    
-    local rirs = r[2]
-    local riro = r[3]
-    
-    if type(r[1]) ~= "number" or type(rirs) ~= "table" or type(riro) ~= "table" then
-        error("Lucide Icons: Internal error: Invalid auto-generated asset entry")
-    end
-    
-    local irs = Vector2.new(rirs[1], rirs[2])
-    local iro = Vector2.new(riro[1], riro[2])
-    
-    local asset = {
-        id = r[1],
-        imageRectSize = irs,
-        imageRectOffset = iro,
-    }
-    
-    return asset
-end
 
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
@@ -3769,13 +3740,10 @@ UniBoxButton.Text = ""
 UniBoxButton.Parent = UniButton
 
 local dragging = false
-local dragInput
 local dragStart
 local startPos
 
 local function updateDrag(input)
-    if not dragging then return end
-    
     local delta = input.Position - dragStart
     UniButton.Position = UDim2.new(
         startPos.X.Scale, 
@@ -3785,26 +3753,24 @@ local function updateDrag(input)
     )
 end
 
-UniBoxButton.MouseButton1Down:Connect(function(x, y)
-    dragging = true
-    dragStart = Vector2.new(x, y)
-    startPos = UniButton.Position
-    
-    local connection
-    connection = UserInputService.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or 
-           input.UserInputType == Enum.UserInputType.Touch then
-            updateDrag(input)
-        end
-    end)
+UniBoxButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = UniButton.Position
+    end
+end)
 
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or 
-           input.UserInputType == Enum.UserInputType.Touch then
-            dragging = false
-            if connection then connection:Disconnect() end
-        end
-    end)
+UserInputService.InputChanged:Connect(function(input)
+    if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+        updateDrag(input)
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = false
+    end
 end)
 
 UniBoxButton.MouseEnter:Connect(function()
@@ -3837,6 +3803,27 @@ end)
 
 UniBoxButton.MouseButton1Click:Connect(function()
     if Debounce then return end
+    
+    TweenService:Create(UniButton, TweenInfo.new(0.05, Enum.EasingStyle.Quint), {
+        Size = UDim2.new(0, 32, 0, 32)
+    }):Play()
+    
+    TweenService:Create(Glow, TweenInfo.new(0.05, Enum.EasingStyle.Quint), {
+        ImageTransparency = 0.5,
+        Size = UDim2.new(1.7, 0, 1.7, 0)
+    }):Play()
+    
+    task.delay(0.05, function()
+        TweenService:Create(UniButton, TweenInfo.new(0.05, Enum.EasingStyle.Quint), {
+            Size = UDim2.new(0, 36, 0, 36)
+        }):Play()
+        
+        TweenService:Create(Glow, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
+            ImageTransparency = 0.9,
+            Size = UDim2.new(1.5, 0, 1.5, 0)
+        }):Play()
+    end)
+    
     if Hidden then
         Hidden = false
         local eyeAsset = getIcon("eye")
@@ -3853,26 +3840,6 @@ UniBoxButton.MouseButton1Click:Connect(function()
         EyeIcon.ImageRectOffset = eyeOffAsset.imageRectOffset
         Hide()
     end
-
-    TweenService:Create(UniButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
-        Size = UDim2.new(0, 32, 0, 32)
-    }):Play()
-    
-    TweenService:Create(Glow, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
-        ImageTransparency = 0.5,
-        Size = UDim2.new(1.7, 0, 1.7, 0)
-    }):Play()
-    
-    task.delay(0.1, function()
-        TweenService:Create(UniButton, TweenInfo.new(0.1, Enum.EasingStyle.Quint), {
-            Size = UDim2.new(0, 36, 0, 36)
-        }):Play()
-        
-        TweenService:Create(Glow, TweenInfo.new(0.2, Enum.EasingStyle.Quint), {
-            ImageTransparency = 0.9,
-            Size = UDim2.new(1.5, 0, 1.5, 0)
-        }):Play()
-    end)
 end)
 
 ArrayFieldLibrary.UniButton = UniButton
