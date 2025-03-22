@@ -3651,7 +3651,6 @@ ContextActionService:BindAction("Field",function(name,inputState,inputObject)
 	end
 end,true)
 --]]
-
 local FieldScreen = Instance.new("ScreenGui")
 FieldScreen.DisplayOrder = 100
 FieldScreen.ScreenInsets = Enum.ScreenInsets.DeviceSafeInsets
@@ -3662,7 +3661,7 @@ local UniButton = Instance.new("Frame")
 UniButton.Name = "UniButton"
 UniButton.Active = true
 UniButton.ZIndex = 10
-UniButton.Position = UDim2.new(0.92, 0, 0.05, 0)
+UniButton.Position = UDim2.new(1, -45, 0, 10) 
 UniButton.BorderSizePixel = 0
 UniButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
 UniButton.Size = UDim2.new(0, 36, 0, 36)
@@ -3705,7 +3704,8 @@ EyeIcon.BackgroundTransparency = 1
 EyeIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
 EyeIcon.AnchorPoint = Vector2.new(0.5, 0.5)
 EyeIcon.Size = UDim2.new(0.6, 0, 0.6, 0)
-EyeIcon.Image = getIcon("eye")
+EyeIcon.ZIndex = 12
+EyeIcon.Image = "rbxassetid://10723407389"
 EyeIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
 EyeIcon.Parent = UniButton
 
@@ -3771,12 +3771,12 @@ UniBoxButton.MouseButton1Click:Connect(function()
     if Debounce then return end
     if Hidden then
         Hidden = false
-        EyeIcon.Image = getIcon("eye")
+        EyeIcon.Image = "rbxassetid://10723407389"
         Unhide()
     else
         if not SearchHided then spawn(CloseSearch) end
         Hidden = true
-        EyeIcon.Image = getIcon("eye-off")
+        EyeIcon.Image = "rbxassetid://10723408528"
         Hide()
     end
 end)
