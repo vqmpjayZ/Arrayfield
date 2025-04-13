@@ -109,7 +109,7 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
 -- Interface Management
-local Rayfield = --[[RunService:IsStudio() and script.Parent or]] game:GetObjects("rbxassetid://117100060147179")[1]
+local Rayfield = --[[RunService:IsStudio() and script.Parent or]] game:GetObjects("rbxassetid://91593006845261")[1]
 Rayfield.Enabled = false
 
 if game["Run Service"]:IsStudio() then
