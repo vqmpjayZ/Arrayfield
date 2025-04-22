@@ -1,6 +1,28 @@
 --[[
 
-h
+ArrayField Interface Suite
+by Meta
+
+Original by Sirius
+
+-------------------------------
+Arrays  | Designing + Programming + New Features
+vqmpjay | Designing + Programming + New Features
+
+]]
+
+--[[
+
+Change Logs:
+- Added Mobile Support (Dragging Functionality + Input Accessibility)
+- Added Lucide icons support to Tabs and Notifications
+- Added rich text support to Paragraphs and Labels
+- Fixed Paragraphs not appearing when not parented to sections
+- Fixed long Paragraphs getting cut off when parented to sections
+- Fixed Search not being able to search for elements parented to sections
+- Fixed Sidetab not loading (Added pcall)
+- Removed Themes Button (pointless)
+- Revamped Design
 
 ]]
 
@@ -870,8 +892,6 @@ end
 
 function CloseSideBar()
 
-Topbar.Type.Active = true
-Topbar.Type.AutoButtonColor = true
 Debounce = true
 	SideBarClosed = true
 	for _,tabbtn in pairs(SideList:GetChildren()) do
@@ -891,6 +911,7 @@ end
 function Hide()
 
     if not SideBarClosed then
+        wait(.1)
         spawn(CloseSideBar)
         TweenService:Create(Main.SideTabList, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {BackgroundTransparency = 1,Size = UDim2.new(0,160,0,285),Position = UDim2.new(0,14,0.5,22)}):Play()
         TweenService:Create(Main.SideTabList.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Quint),{Transparency = 1}):Play()
@@ -980,6 +1001,7 @@ end
 function Unhide()
 
     if SideBarClosed then
+        wait(.1)
 		spawn(OpenSideBar)
 	end
 
@@ -1266,7 +1288,7 @@ function OpenSideBar()
 	end
 	SideBarClosed = false
     Topbar.Type.Active = false
-    Topbar.Type.AutoButtonColor = false
+    Topbar.Type.AutoButtonColor = false    
     TweenService:Create(Main.SideTabList, TweenInfo.new(0.4, Enum.EasingStyle.Quint), {BackgroundTransparency = 0,Size = UDim2.new(0,160,0,285),Position = UDim2.new(0,14,0.5,22)}):Play()
 	TweenService:Create(Main.SideTabList.UIStroke, TweenInfo.new(0.4, Enum.EasingStyle.Quint),{Transparency = 0}):Play()
 	TweenService:Create(Main.SideTabList.RDMT, TweenInfo.new(0.4, Enum.EasingStyle.Quint),{TextTransparency = 0}):Play()
@@ -1345,6 +1367,9 @@ function Minimise()
 end
 
 function ArrayFieldLibrary:CreateWindow(Settings)
+    Topbar.Type.Active = false
+    Topbar.Type.AutoButtonColor = false
+
     local OriginalTopbarSize = Topbar.Size
 	ArrayField.Enabled = false
 	local Passthrough = false
@@ -3705,7 +3730,12 @@ Topbar.Type.MouseButton1Click:Connect(function()
 	if Debounce or Minimised or not SideBarClosed then return end
 
 	Topbar.Type.Image = "rbxassetid://"..6023565894
-	OpenSideBar()
+    ArrayFieldLibrary:Notify({
+		Title = "ArrayField Library",
+		Content = "This library was made by vqmpjay, for more scripts or libraries join Vadrifts: dsc.gg/vadriftz (in Browsers)",
+		Image = "venetian-mask",
+		Duration = 6
+	})
 end)
 Topbar.Hide.MouseButton1Click:Connect(function()
 	if Debounce then return end
