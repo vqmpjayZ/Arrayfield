@@ -1,28 +1,5 @@
 --[[
-
-ArrayField Interface Suite
-by Meta
-
-Original by Sirius
-
--------------------------------
-Arrays  | Designing + Programming + New Features
-vqmpjay | Designing + Programming + New Features
-
-]]
-
---[[
-
-Change Logs:
-- Added Mobile Support (Dragging Functionality + Input Accessibility)
-- Added Lucide icons support to Tabs and Notifications
-- Added rich text support to Paragraphs and Labels
-- Fixed Paragraphs not appearing when not parented to sections
-- Fixed long Paragraphs getting cut off when parented to sections
-- Fixed Search not being able to search for elements parented to sections
-- Fixed Sidetab not loading (Added pcall)
-- Removed Themes Button (pointless)
-- Revamped Design
+hdj
 
 ]]
 
@@ -999,7 +976,8 @@ function Hide()
 end
 function Unhide()
 
-    Main.Size = UDim2.new(0, 250, 0, 260)
+    TweenService:Create(Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = OriginalTopbarSize}):Play()
+    
     if SideBarClosed then
 		spawn(OpenSideBar)
 	end
@@ -1361,6 +1339,7 @@ function Minimise()
 end
 
 function ArrayFieldLibrary:CreateWindow(Settings)
+    local OriginalTopbarSize = Topbar.Size
 	ArrayField.Enabled = false
 	local Passthrough = false
 	Topbar.Title.Text = Settings.Name
