@@ -1,5 +1,6 @@
 --[[
-penis butter vaginelly samndwich
+
+i think i fixed all errors now
 
 ]]
 
@@ -983,9 +984,8 @@ function Unhide()
 	Debounce = true
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
 	Main.Visible = true
-    Topbar.Size = UDim2.new(0, 700, 0, 45)
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 700, 0, 355)}):Play()
-	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 500, 0, 45)}):Play()
+	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {Size = UDim2.new(0, 700, 0, 45)}):Play()
 	TweenService:Create(Main.Shadow.Image, TweenInfo.new(0.7, Enum.EasingStyle.Quint), {ImageTransparency = 0.4}):Play()
 	TweenService:Create(Main, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
 	TweenService:Create(Main.Topbar, TweenInfo.new(0.5, Enum.EasingStyle.Quint), {BackgroundTransparency = 0}):Play()
